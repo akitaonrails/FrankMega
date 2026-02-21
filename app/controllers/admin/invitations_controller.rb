@@ -1,0 +1,30 @@
+module Admin
+  class InvitationsController < Admin::ApplicationController
+    def index
+      @invitations = Invitation.includes(:created_by, :used_by).order(created_at: :desc)
+    end
+
+    def new
+      @invitation = Invitation.new
+    end
+
+    def create
+      @invitation = Invitation.new(
+        created_by: current_user,
+        expires_at: params.dig(:invitation, :expires_at) || 7.days.from_now
+      )
+
+      if @invitation.save
+        redirect_to admin_invitations_path, notice: "Invitation created: #{register_url(code: @invitation.code)}"
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      invitation = Invitation.find(params[:id])
+      invitation.destroy
+      redirect_to admin_invitations_path, notice: "Invitation revoked."
+    end
+  end
+end

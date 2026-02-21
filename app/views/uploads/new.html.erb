@@ -1,0 +1,54 @@
+<div class="max-w-2xl mx-auto py-8">
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Upload File</h1>
+
+    <%= render "shared/form_errors", resource: @shared_file %>
+
+    <%= form_with model: @shared_file, url: uploads_path, multipart: true, class: "space-y-6",
+        data: { controller: "upload" } do |f| %>
+
+      <%# Drag and drop zone %>
+      <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center transition-colors"
+           data-upload-target="dropzone"
+           data-action="dragover->upload#dragover dragenter->upload#dragenter dragleave->upload#dragleave drop->upload#drop">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+        </svg>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Drag and drop your file here, or</p>
+        <%= file_field_tag :file, accept: AllowedMimeType.enabled_types.join(","),
+            class: "mt-2 block mx-auto text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover file:cursor-pointer",
+            data: { upload_target: "input", action: "change->upload#fileSelected" } %>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Max file size: 1 GB</p>
+
+        <%# File preview %>
+        <div data-upload-target="preview" class="hidden mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-left">
+          <p class="text-sm font-medium text-gray-900 dark:text-white" data-upload-target="filename"></p>
+          <p class="text-xs text-gray-500 dark:text-gray-400" data-upload-target="filesize"></p>
+        </div>
+
+        <%# Progress bar %>
+        <div data-upload-target="progress" class="hidden mt-4">
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div data-upload-target="progressBar" class="bg-primary h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" data-upload-target="progressText">0%</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :max_downloads, "Max Downloads", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.number_field :max_downloads, min: 1, max: 100, value: 5,
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+        <div>
+          <%= f.label :ttl_hours, "Expires After (hours)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.number_field :ttl_hours, min: 1, max: 24, value: 24,
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+      </div>
+
+      <%= f.submit "Upload & Share", class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+    <% end %>
+  </div>
+</div>

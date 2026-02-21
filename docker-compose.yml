@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:80"
+    volumes:
+      - uploads:/rails/storage/uploads
+      - db_data:/rails/storage
+    environment:
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - HOST=${HOST:-frankmega.example.com}
+      - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN:-https://frankmega.example.com}
+      - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-frankmega.example.com}
+      - STORAGE_PATH=/rails/storage/uploads
+      - SMTP_ADDRESS=${SMTP_ADDRESS:-localhost}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=${ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY}
+      - ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=${ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY}
+      - ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=${ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT}
+    restart: unless-stopped
+
+volumes:
+  uploads:
+  db_data:

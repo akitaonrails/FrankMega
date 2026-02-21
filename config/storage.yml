@@ -1,0 +1,11 @@
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
+
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+
+production:
+  service: Disk
+  root: <%= ENV.fetch("STORAGE_PATH", Rails.root.join("storage/uploads")) %>

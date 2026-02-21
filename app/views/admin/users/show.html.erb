@@ -1,0 +1,57 @@
+<div class="max-w-4xl mx-auto py-8 space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= @user.email_address %></h1>
+    <%= link_to "Back", admin_users_path, class: "text-primary hover:underline" %>
+  </div>
+
+  <% if flash[:notice] %>
+    <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-sm text-green-700 dark:text-green-300">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6">
+    <dl class="grid grid-cols-2 gap-4 text-sm">
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Role</dt>
+        <dd class="font-medium text-gray-900 dark:text-white"><%= @user.role %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Status</dt>
+        <dd class="font-medium"><%= @user.banned? ? "Banned" : "Active" %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">2FA</dt>
+        <dd class="font-medium"><%= @user.otp_required? ? "Enabled" : "Disabled" %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Files</dt>
+        <dd class="font-medium"><%= @user.shared_files.count %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="flex gap-3">
+    <% if @user.banned? %>
+      <%= button_to "Unban", unban_admin_user_path(@user), class: "py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors" %>
+    <% else %>
+      <%= button_to "Ban", ban_admin_user_path(@user), class: "py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors",
+          data: { turbo_confirm: "Ban this user? Their sessions will be destroyed." } %>
+    <% end %>
+    <%= button_to "Reset Password", reset_password_admin_user_path(@user), class: "py-2 px-4 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors",
+        data: { turbo_confirm: "Reset this user's password?" } %>
+    <%= link_to "Edit", edit_admin_user_path(@user), class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>
+  </div>
+
+  <% if @shared_files.any? %>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Files</h2>
+    <div class="space-y-2">
+      <% @shared_files.each do |sf| %>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 flex items-center justify-between text-sm">
+          <span class="text-gray-900 dark:text-white"><%= sf.original_filename %></span>
+          <span class="text-gray-500 dark:text-gray-400"><%= sf.download_count %>/<%= sf.max_downloads %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

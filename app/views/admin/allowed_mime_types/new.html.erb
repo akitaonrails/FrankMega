@@ -1,0 +1,29 @@
+<div class="max-w-lg mx-auto py-8">
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Add MIME Type</h1>
+
+    <%= form_with model: @mime_type, url: admin_allowed_mime_types_path, class: "space-y-6" do |f| %>
+      <div>
+        <%= f.label :mime_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.text_field :mime_type, placeholder: "e.g. application/pdf",
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+
+      <div>
+        <%= f.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.text_field :description, placeholder: "e.g. PDF Document",
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+
+      <div class="flex items-center">
+        <%= f.check_box :enabled, class: "h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" %>
+        <%= f.label :enabled, "Enabled", class: "ml-2 text-sm text-gray-700 dark:text-gray-300" %>
+      </div>
+
+      <div class="flex gap-4">
+        <%= f.submit "Add", class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+        <%= link_to "Cancel", admin_allowed_mime_types_path, class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+      run: bundle exec rubocop --parallel {staged_files}
+      glob: "*.rb"
+    brakeman:
+      run: bundle exec brakeman --no-pager --quiet
+    bundle-audit:
+      run: bundle exec bundler-audit check --update
+
+pre-push:
+  commands:
+    tests:
+      run: bundle exec rails test

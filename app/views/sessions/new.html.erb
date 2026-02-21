@@ -1,0 +1,52 @@
+<div class="min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md">
+    <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
+      <h1 class="text-3xl font-bold text-center text-primary mb-2">FrankMega</h1>
+      <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Sign in to your account</p>
+
+      <% if flash[:alert] %>
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 mb-4 text-sm text-red-700 dark:text-red-300">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <% if flash[:notice] %>
+        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-4 text-sm text-green-700 dark:text-green-300">
+          <%= flash[:notice] %>
+        </div>
+      <% end %>
+
+      <%= form_with url: session_url, class: "space-y-6", data: { controller: "webauthn", webauthn_challenge_url_value: new_webauthn_session_path } do |f| %>
+        <div>
+          <%= f.label :email_address, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "username",
+              data: { webauthn_target: "email" },
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.password_field :password, required: true, autocomplete: "current-password", maxlength: 72,
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <%= f.submit "Sign in", class: "py-3 px-6 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+          <%= link_to "Forgot password?", new_password_path, class: "text-sm text-primary hover:underline" %>
+        </div>
+      <% end %>
+
+      <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <button type="button"
+                data-controller="webauthn"
+                data-action="click->webauthn#authenticate"
+                class="w-full py-3 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+          </svg>
+          Sign in with Passkey
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

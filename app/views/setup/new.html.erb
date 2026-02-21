@@ -1,0 +1,32 @@
+<div class="min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md">
+    <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
+      <h1 class="text-3xl font-bold text-center text-primary mb-2">FrankMega</h1>
+      <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Create your admin account</p>
+
+      <%= render "shared/form_errors", resource: @user %>
+
+      <%= form_with model: @user, url: setup_path, class: "space-y-6" do |f| %>
+        <div>
+          <%= f.label :email_address, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "email",
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.password_field :password, required: true, autocomplete: "new-password",
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password",
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+
+        <%= f.submit "Create Admin Account", class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="max-w-lg mx-auto py-8">
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Edit User</h1>
+
+    <%= render "shared/form_errors", resource: @user %>
+
+    <%= form_with model: @user, url: admin_user_path(@user), class: "space-y-6" do |f| %>
+      <div>
+        <%= f.label :email_address, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.email_field :email_address,
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+
+      <div>
+        <%= f.label :role, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.select :role, %w[user admin],
+            {}, class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+
+      <div class="flex gap-4">
+        <%= f.submit "Update", class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+        <%= link_to "Cancel", admin_user_path(@user), class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>

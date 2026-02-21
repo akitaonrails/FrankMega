@@ -1,0 +1,34 @@
+<div class="max-w-lg mx-auto py-8">
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
+    <h1 class="text-2xl font-bold text-primary mb-2">Enable Two-Factor Authentication</h1>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)</p>
+
+    <% if flash[:alert] %>
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 mb-4 text-sm text-red-700 dark:text-red-300">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <% if @qr_code %>
+      <div class="flex justify-center mb-6">
+        <div class="bg-white p-4 rounded-lg">
+          <%= @qr_code.as_svg(module_size: 4, standalone: true, use_path: true).html_safe %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= form_with url: two_factor_path, class: "space-y-6" do |f| %>
+      <div>
+        <%= f.label :otp_code, "Verification Code", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.text_field :otp_code, required: true, autofocus: true, autocomplete: "one-time-code", inputmode: "numeric", pattern: "[0-9]{6}", maxlength: 6,
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-center text-2xl tracking-widest" %>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter the 6-digit code from your authenticator app to confirm setup</p>
+      </div>
+
+      <div class="flex gap-4">
+        <%= f.submit "Enable 2FA", class: "flex-1 py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+        <%= link_to "Cancel", profile_path, class: "flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-center" %>
+      </div>
+    <% end %>
+  </div>
+</div>

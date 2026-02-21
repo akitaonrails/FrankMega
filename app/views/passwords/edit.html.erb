@@ -1,0 +1,30 @@
+<div class="min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md">
+    <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
+      <h1 class="text-3xl font-bold text-center text-primary mb-2">Set New Password</h1>
+      <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Enter your new password</p>
+
+      <% if flash[:alert] %>
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 mb-4 text-sm text-red-700 dark:text-red-300">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <%= form_with url: password_path(params[:token]), method: :put, class: "space-y-6" do |f| %>
+        <div>
+          <%= f.label :password, "New Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.password_field :password, required: true, autocomplete: "new-password",
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password",
+              class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+
+        <%= f.submit "Reset Password", class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "admin_users_controller_role_mass_assignment",
+      "note": "Intentional: only admin users can access this controller and change roles"
+    }
+  ],
+  "updated": "2026-02-21",
+  "brakeman_version": "8.0.2"
+}
