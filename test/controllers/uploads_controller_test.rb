@@ -35,7 +35,7 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
     assert_difference "SharedFile.count", -1 do
       delete upload_path(shared_file)
     end
-    assert_redirected_to dashboard_path
+    assert_redirected_to new_upload_path
   end
 
   test "cannot access another users file" do

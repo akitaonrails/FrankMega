@@ -1,0 +1,10 @@
+.dark {
+  --color-bg: hsl(210 20% 12%);
+  --color-bg-surface: hsl(210 18% 18%);
+  --color-bg-muted: hsl(210 16% 22%);
+  --color-text: hsl(210 15% 92%);
+  --color-text-muted: hsl(210 10% 65%);
+  --color-text-faint: hsl(210 10% 50%);
+  --color-border: hsl(210 15% 30%);
+  --color-border-muted: hsl(210 15% 24%);
+}

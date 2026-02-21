@@ -1,6 +1,14 @@
+<%= turbo_stream_from "user_#{current_user.id}_notifications" %>
+
 <div class="max-w-2xl mx-auto py-8">
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Upload File</h1>
+
+    <% if flash[:notice] %>
+      <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-4 text-sm text-green-700 dark:text-green-300">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
 
     <%= render "shared/form_errors", resource: @shared_file %>
 
@@ -51,4 +59,25 @@
       <%= f.submit "Upload & Share", class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
     <% end %>
   </div>
+
+  <%# Toast notifications area %>
+  <div id="toast_notifications" class="fixed top-20 right-4 z-50 space-y-2"></div>
+
+  <% if @active_files.any? %>
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-3">Active Files</h2>
+    <div class="space-y-3">
+      <% @active_files.each do |shared_file| %>
+        <%= render "uploads/shared_file", shared_file: shared_file %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @inactive_files.any? %>
+    <h2 class="text-lg font-semibold text-gray-500 dark:text-gray-400 mt-8 mb-3">Expired / Exhausted</h2>
+    <div class="space-y-3 opacity-60">
+      <% @inactive_files.each do |shared_file| %>
+        <%= render "uploads/shared_file", shared_file: shared_file %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

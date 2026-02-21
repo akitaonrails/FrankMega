@@ -27,18 +27,17 @@ Built with Ruby on Rails 8.1, SQLite3, Tailwind CSS. Zero external services requ
 # Secret key base
 docker run --rm ruby:3.4.8-slim ruby -e "puts SecureRandom.hex(64)"
 
-# Rails master key (if not already in config/master.key)
-docker run --rm ruby:3.4.8-slim ruby -e "puts SecureRandom.hex(16)"
-
 # ActiveRecord encryption keys (generates 3 keys, one per line)
 docker run --rm ruby:3.4.8-slim ruby -e "3.times { puts SecureRandom.hex(32) }"
 ```
 
 ### 2. Create a `.env` file
 
+> **Important:** `RAILS_MASTER_KEY` must be the value from `config/master.key` in your repo (created by `rails new`). Do **not** generate a new one — it must match the key that encrypted `config/credentials.yml.enc`.
+
 ```env
 SECRET_KEY_BASE=<generated above>
-RAILS_MASTER_KEY=<generated above>
+RAILS_MASTER_KEY=<copy from config/master.key>
 
 HOST=frankmega.yourdomain.com
 WEBAUTHN_ORIGIN=https://frankmega.yourdomain.com
@@ -52,6 +51,10 @@ SMTP_ADDRESS=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USERNAME=you@gmail.com
 SMTP_PASSWORD=your-app-password
+
+# Set to true when behind Cloudflare Tunnel (or any SSL-terminating proxy)
+# Leave false (default) for local Docker testing without TLS
+FORCE_SSL=true
 ```
 
 ### 3. Build and start
@@ -73,7 +76,7 @@ Data is persisted in two Docker volumes: `uploads` (files) and `db_data` (SQLite
    - **Domain:** `yourdomain.com`
    - **Service:** `http://localhost:3000`
 3. Under **SSL/TLS** settings for the domain, set encryption mode to **Full**
-4. The app already has `config.assume_ssl = true` and `config.force_ssl = true`, so Cloudflare handles TLS termination and the app trusts the `X-Forwarded-Proto` header
+4. Set `FORCE_SSL=true` in your `.env` — this enables `assume_ssl` and `force_ssl` so Rails trusts the `X-Forwarded-Proto` header from Cloudflare
 
 The app automatically trusts [Cloudflare IP ranges](https://www.cloudflare.com/ips/) so that rate limiting and IP banning work against real client IPs, not Cloudflare's.
 

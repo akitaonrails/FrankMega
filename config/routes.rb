@@ -26,9 +26,6 @@ Rails.application.routes.draw do
   # Profile
   resource :profile, only: %i[show update]
 
-  # Dashboard (authenticated)
-  get "dashboard", to: "dashboard#index"
-
   # File uploads (authenticated)
   resources :uploads, only: %i[new create show destroy]
 
@@ -56,7 +53,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Root
-  root "dashboard#index"
+  root "uploads#new"
 
   # Catch-all for non-existent routes
   match "*unmatched", to: "application#route_not_found", via: :all, constraints: ->(req) { !req.path.start_with?("/rails/") }

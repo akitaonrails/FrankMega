@@ -7,9 +7,7 @@
           <span class="text-2xl font-bold text-primary">Frank</span><span class="text-2xl font-bold text-gray-900 dark:text-white">Mega</span>
         <% end %>
 
-        <div class="hidden sm:flex items-center gap-4">
-          <%= link_to "Dashboard", dashboard_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" %>
-          <%= link_to "Upload", new_upload_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" %>
+        <div class="flex items-center gap-4">
           <% if current_user&.admin? %>
             <%= link_to "Admin", admin_root_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" %>
           <% end %>
@@ -31,10 +29,17 @@
         </button>
 
         <%# User menu %>
-        <div class="flex items-center gap-2">
-          <span class="text-sm text-gray-500 dark:text-gray-400 hidden sm:block"><%= current_user&.email_address %></span>
-          <%= link_to "Profile", profile_path, class: "text-sm text-gray-600 dark:text-gray-300 hover:text-primary" %>
-          <%= button_to "Log out", session_path, method: :delete, class: "text-sm text-gray-600 dark:text-gray-300 hover:text-primary" %>
+        <div class="relative" data-controller="dropdown">
+          <button type="button" data-action="click->dropdown#toggle" class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors cursor-pointer">
+            <%= current_user&.email_address %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div data-dropdown-target="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
+            <%= link_to "Profile", profile_path, class: "block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" %>
+            <%= button_to "Log out", session_path, method: :delete, form: { class: "w-full" }, class: "w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer" %>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,8 @@
 class UploadsController < ApplicationController
   def new
     @shared_file = SharedFile.new(max_downloads: 5, ttl_hours: 24)
+    @active_files = current_user.shared_files.active.order(created_at: :desc)
+    @inactive_files = current_user.shared_files.inactive.order(created_at: :desc)
   end
 
   def create
@@ -29,7 +31,7 @@ class UploadsController < ApplicationController
     @shared_file = current_user.shared_files.find(params[:id])
     @shared_file.file.purge
     @shared_file.destroy
-    redirect_to dashboard_path, notice: "File deleted."
+    redirect_to new_upload_path, notice: "File deleted."
   end
 
   private

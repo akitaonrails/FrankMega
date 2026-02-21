@@ -1,0 +1,10 @@
+:root {
+  --color-bg: hsl(210 15% 97%);
+  --color-bg-surface: hsl(0 0% 100%);
+  --color-bg-muted: hsl(210 15% 94%);
+  --color-text: hsl(210 15% 10%);
+  --color-text-muted: hsl(210 10% 40%);
+  --color-text-faint: hsl(210 10% 55%);
+  --color-border: hsl(210 15% 82%);
+  --color-border-muted: hsl(210 15% 90%);
+}

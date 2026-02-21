@@ -1,13 +1,22 @@
 @import "tailwindcss";
+@import "./themes/light.css";
+@import "./themes/dark.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Brand colors */
   --color-primary: hsl(0 85% 50%);
   --color-primary-hover: hsl(0 85% 40%);
   --color-secondary: hsl(210 15% 20%);
-  --color-surface: hsl(210 15% 97%);
-  --color-dark-bg: hsl(210 20% 12%);
-  --color-dark-surface: hsl(210 18% 18%);
+
+  /* Status colors */
   --color-success: hsl(145 65% 40%);
   --color-warning: hsl(40 90% 55%);
   --color-danger: hsl(0 70% 55%);
+
+  /* Semantic tokens (swap between light/dark via CSS custom properties) */
+  --color-surface: var(--color-bg);
+  --color-dark-bg: var(--color-bg);
+  --color-dark-surface: var(--color-bg-surface);
 }
