@@ -7,6 +7,10 @@
     {
       "fingerprint": "d991a43cc168c94a185093d8659adba6e71b73e814cc9cba8196bcbd0b949783",
       "note": "File key comes from ActiveStorage blob, not user input — path resolves within storage directory only"
+    },
+    {
+      "fingerprint": "0b24d3d03cbb4c2a72f6224a11fe12f5d569c7d4a23811884a2d1be92d39167a",
+      "note": "Preview send_file: key comes from ActiveStorage blob, not user input — same pattern as download action"
     }
   ],
   "updated": "2026-02-21",

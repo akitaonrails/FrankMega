@@ -29,6 +29,22 @@ class DownloadsController < ApplicationController
     end
   end
 
+  def preview
+    if @shared_file.nil?
+      record_invalid_access
+      render plain: "Not Found", status: :not_found
+    elsif !@shared_file.active?
+      render plain: "Gone", status: :gone
+    elsif !@shared_file.previewable?
+      render plain: "Not Found", status: :not_found
+    else
+      send_file ActiveStorage::Blob.service.path_for(@shared_file.file.key),
+                filename: @shared_file.original_filename,
+                type: @shared_file.content_type,
+                disposition: "inline"
+    end
+  end
+
   private
 
   def find_shared_file

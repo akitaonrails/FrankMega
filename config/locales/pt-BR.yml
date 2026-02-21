@@ -153,6 +153,8 @@ pt-BR:
       downloads_remaining: "Downloads restantes"
       download: "Baixar"
       expiry_note: "Este link expirará automaticamente."
+      video_not_supported: "Seu navegador não suporta reprodução de vídeo."
+      audio_not_supported: "Seu navegador não suporta reprodução de áudio."
 
   dashboard:
     index:

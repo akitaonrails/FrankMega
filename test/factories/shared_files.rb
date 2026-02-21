@@ -28,5 +28,20 @@ FactoryBot.define do
     trait :large do
       file_size { 500.megabytes }
     end
+
+    trait :image do
+      original_filename { "photo.png" }
+      content_type { "image/png" }
+    end
+
+    trait :video do
+      original_filename { "clip.mp4" }
+      content_type { "video/mp4" }
+    end
+
+    trait :audio do
+      original_filename { "song.mp3" }
+      content_type { "audio/mpeg" }
+    end
   end
 end

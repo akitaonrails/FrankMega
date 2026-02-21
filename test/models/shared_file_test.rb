@@ -113,4 +113,53 @@ class SharedFileTest < ActiveSupport::TestCase
     assert_not file.valid?
     assert file.errors[:original_filename].any?
   end
+
+  test "image? returns true for image types" do
+    %w[image/jpeg image/png image/gif image/webp image/svg+xml].each do |type|
+      file = build(:shared_file, content_type: type)
+      assert file.image?, "Expected image? to be true for #{type}"
+    end
+  end
+
+  test "image? returns false for non-image types" do
+    file = build(:shared_file, content_type: "application/pdf")
+    assert_not file.image?
+  end
+
+  test "video? returns true for video types" do
+    %w[video/mp4 video/webm].each do |type|
+      file = build(:shared_file, content_type: type)
+      assert file.video?, "Expected video? to be true for #{type}"
+    end
+  end
+
+  test "video? returns false for non-video types" do
+    file = build(:shared_file, content_type: "application/pdf")
+    assert_not file.video?
+  end
+
+  test "audio? returns true for audio types" do
+    %w[audio/mpeg audio/ogg].each do |type|
+      file = build(:shared_file, content_type: type)
+      assert file.audio?, "Expected audio? to be true for #{type}"
+    end
+  end
+
+  test "audio? returns false for non-audio types" do
+    file = build(:shared_file, content_type: "application/pdf")
+    assert_not file.audio?
+  end
+
+  test "previewable? returns true for image video and audio" do
+    assert build(:shared_file, content_type: "image/png").previewable?
+    assert build(:shared_file, content_type: "video/mp4").previewable?
+    assert build(:shared_file, content_type: "audio/mpeg").previewable?
+  end
+
+  test "previewable? returns false for non-previewable types" do
+    %w[application/pdf application/zip text/plain].each do |type|
+      file = build(:shared_file, content_type: type)
+      assert_not file.previewable?, "Expected previewable? to be false for #{type}"
+    end
+  end
 end

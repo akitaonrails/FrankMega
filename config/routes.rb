@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   # Public download (no auth required)
   get "d/:hash", to: "downloads#show", as: :download
   post "d/:hash/file", to: "downloads#file", as: :download_file
+  get "d/:hash/preview", to: "downloads#preview", as: :download_preview
 
   # Admin panel
   namespace :admin do

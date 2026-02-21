@@ -3,6 +3,7 @@ Rails.application.configure do
     policy.default_src :self
     policy.font_src    :self
     policy.img_src     :self, :data
+    policy.media_src   :self
     policy.object_src  :none
     policy.script_src  :self
     policy.style_src   :self, :unsafe_inline

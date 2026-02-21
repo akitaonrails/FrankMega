@@ -153,6 +153,8 @@ en:
       downloads_remaining: "Downloads remaining"
       download: "Download"
       expiry_note: "This link will expire automatically."
+      video_not_supported: "Your browser does not support video playback."
+      audio_not_supported: "Your browser does not support audio playback."
 
   dashboard:
     index:

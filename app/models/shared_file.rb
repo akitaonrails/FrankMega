@@ -51,6 +51,26 @@ class SharedFile < ApplicationRecord
         .update_all("download_count = download_count + 1") == 1
   end
 
+  PREVIEWABLE_IMAGE_TYPES = %w[image/jpeg image/png image/gif image/webp image/svg+xml].freeze
+  PREVIEWABLE_VIDEO_TYPES = %w[video/mp4 video/webm].freeze
+  PREVIEWABLE_AUDIO_TYPES = %w[audio/mpeg audio/ogg].freeze
+
+  def image?
+    PREVIEWABLE_IMAGE_TYPES.include?(content_type)
+  end
+
+  def video?
+    PREVIEWABLE_VIDEO_TYPES.include?(content_type)
+  end
+
+  def audio?
+    PREVIEWABLE_AUDIO_TYPES.include?(content_type)
+  end
+
+  def previewable?
+    image? || video? || audio?
+  end
+
   def download_url_path
     "/d/#{download_hash}"
   end
