@@ -1,7 +1,7 @@
 module Admin
   class InvitationsController < Admin::ApplicationController
     def index
-      @invitations = Invitation.includes(:created_by, :used_by).order(created_at: :desc)
+      @invitations = Invitation.includes(:used_by).order(created_at: :desc)
     end
 
     def new

@@ -29,7 +29,7 @@
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.invitations.index.code") %></th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.invitations.index.created_by") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.invitations.index.used_by") %></th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.invitations.index.status") %></th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.invitations.index.expires") %></th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.invitations.index.actions") %></th>
@@ -39,7 +39,7 @@
         <% @invitations.each do |invitation| %>
           <tr>
             <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-mono"><%= invitation.code.truncate(16) %></td>
-            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><%= invitation.created_by.email_address %></td>
+            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><%= invitation.used_by&.email_address %></td>
             <td class="px-6 py-4 text-sm">
               <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
                 <%= case invitation.status

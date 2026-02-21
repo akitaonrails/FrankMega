@@ -207,7 +207,7 @@ en:
         heading: "Invitations"
         create_invitation: "Create Invitation"
         code: "Code"
-        created_by: "Created By"
+        used_by: "Used By"
         status: "Status"
         expires: "Expires"
         actions: "Actions"

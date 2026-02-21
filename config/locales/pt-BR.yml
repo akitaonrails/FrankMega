@@ -207,7 +207,7 @@ pt-BR:
         heading: "Convites"
         create_invitation: "Criar Convite"
         code: "Código"
-        created_by: "Criado Por"
+        used_by: "Usado Por"
         status: "Status"
         expires: "Expira"
         actions: "Ações"
