@@ -7,7 +7,20 @@
 
   <% if flash[:notice] %>
     <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-4 text-sm text-green-700 dark:text-green-300">
-      <%= flash[:notice] %>
+      <p><%= flash[:notice] %></p>
+      <% if flash[:invitation_url] %>
+        <div class="mt-2" data-controller="clipboard" data-clipboard-copied-text-value="<%= t('js.copied') %>">
+          <div class="flex">
+            <input type="text" readonly value="<%= flash[:invitation_url] %>"
+                   data-clipboard-target="source"
+                   class="flex-1 px-3 py-2 rounded-l-lg border border-green-300 dark:border-green-700 dark:bg-gray-800 dark:text-white bg-white text-sm font-mono">
+            <button type="button" data-action="click->clipboard#copy"
+                    class="px-4 py-2 bg-primary hover:bg-primary-hover text-white font-semibold rounded-r-lg transition-colors text-sm">
+              <%= t("shared.actions.copy") %>
+            </button>
+          </div>
+        </div>
+      <% end %>
     </div>
   <% end %>
 

@@ -306,7 +306,7 @@ en:
           notice: "User unbanned."
       invitations:
         create:
-          notice: "Invitation created: %{url}"
+          notice: "Invitation created!"
         destroy:
           notice: "Invitation revoked."
       shared_files:

@@ -15,7 +15,9 @@ module Admin
       )
 
       if @invitation.save
-        redirect_to admin_invitations_path, notice: t("flash.admin.invitations.create.notice", url: register_url(code: @invitation.code))
+        flash[:notice] = t("flash.admin.invitations.create.notice")
+        flash[:invitation_url] = register_url(code: @invitation.code)
+        redirect_to admin_invitations_path
       else
         render :new, status: :unprocessable_entity
       end

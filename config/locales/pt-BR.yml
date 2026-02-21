@@ -306,7 +306,7 @@ pt-BR:
           notice: "Usuário desbanido."
       invitations:
         create:
-          notice: "Convite criado: %{url}"
+          notice: "Convite criado!"
         destroy:
           notice: "Convite revogado."
       shared_files:
