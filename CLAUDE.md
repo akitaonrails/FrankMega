@@ -202,7 +202,7 @@ Controllers live in `app/javascript/controllers/`. Naming: `*_controller.js` wit
 
 Existing controllers:
 - `theme_controller.js` - Dark mode toggle, `localStorage` persistence
-- `upload_controller.js` - Drag-and-drop zone, file preview, size formatting
+- `upload_controller.js` - Drag-and-drop zone, file preview, size formatting, client-side file/quota/filename validation
 - `clipboard_controller.js` - Copy text to clipboard
 - `notification_controller.js` - Auto-dismissing toast notifications
 - `webauthn_controller.js` - Passkey registration and authentication
@@ -290,6 +290,8 @@ end
 **Headers:** `secure_headers` gem configures CSP, HSTS, X-Frame-Options, etc. CSP allows `'self'` for scripts and `'unsafe-inline'` for styles (Tailwind requirement).
 
 **Cookies:** Secure, HttpOnly, SameSite=Lax. Session cookie is signed and permanent.
+
+**Filename sanitization:** `UploadsController#sanitize_filename` strips control characters (0x00-0x1F, 0x7F), Windows-unsafe chars (`:*?"<>|`), leading dots, and collapses whitespace. Windows reserved device names (CON, PRN, AUX, NUL, COM1-9, LPT1-9) are prefixed with `_`. Filenames are truncated to 255 bytes preserving extension via `truncate_filename`. `SharedFile` also validates `original_filename` length at the model level. Client-side validation in `upload_controller.js` checks file size, storage quota, and filename before upload starts.
 
 **Cloudflare:** Trusted proxy IPs configured manually in `config/initializers/cloudflare.rb` (the `cloudflare-rails` gem is incompatible with Rails 8.1).
 

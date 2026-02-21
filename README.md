@@ -14,6 +14,7 @@ Built with Ruby on Rails 8.1, SQLite3, Tailwind CSS. Zero external services requ
 - **Passkey / WebAuthn support** — passwordless login via hardware keys or platform authenticators
 - **TOTP 2FA** — optional authenticator app verification with QR code setup
 - **Admin panel** — manage users, invitations, files, and allowed MIME types
+- **Upload validation** — client-side file size, quota, and filename checks before upload; server-side filename sanitization strips traversal paths, control characters, and Windows reserved names
 - **Aggressive rate limiting** — Rack::Attack throttles + automatic IP banning on suspicious behavior
 - **Cloudflare-aware** — trusts Cloudflare proxy IPs so `request.ip` returns the real client
 - **Dark mode** — toggle with system preference fallback
