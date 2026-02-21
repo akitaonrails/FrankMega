@@ -9,10 +9,11 @@ class UploadsController < ApplicationController
     @shared_file = current_user.shared_files.new(upload_params)
 
     if params[:file].present?
-      @shared_file.file.attach(params[:file])
-      @shared_file.original_filename = params[:file].original_filename
-      @shared_file.content_type = params[:file].content_type
-      @shared_file.file_size = params[:file].size
+      uploaded = params[:file]
+      @shared_file.file.attach(uploaded)
+      @shared_file.original_filename = sanitize_filename(uploaded.original_filename)
+      @shared_file.content_type = Marcel::MimeType.for(uploaded.tempfile, name: uploaded.original_filename)
+      @shared_file.file_size = uploaded.tempfile.size
     end
 
     if @shared_file.save
@@ -42,5 +43,13 @@ class UploadsController < ApplicationController
 
   def download_url(shared_file)
     "#{request.base_url}/d/#{shared_file.download_hash}"
+  end
+
+  def sanitize_filename(name)
+    basename = File.basename(name.to_s)
+    sanitized = basename.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
+                        .gsub(/[\x00\/\\]/, "")
+                        .strip
+    sanitized.presence || "unnamed_file"
   end
 end

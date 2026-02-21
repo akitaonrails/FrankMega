@@ -25,10 +25,9 @@ Rails.application.configure do
   config.active_storage.service = :production
 
   # Enable SSL when behind an SSL-terminating reverse proxy (Cloudflare, nginx).
-  # Set FORCE_SSL=true in production when deployed behind Cloudflare Tunnel.
-  # Defaults to false so Docker can be tested locally without TLS.
-  config.assume_ssl = ENV.fetch("FORCE_SSL", "false") == "true"
-  config.force_ssl = ENV.fetch("FORCE_SSL", "false") == "true"
+  # Defaults to true — set FORCE_SSL=false explicitly for local Docker testing without TLS.
+  config.assume_ssl = ENV.fetch("FORCE_SSL", "true") == "true"
+  config.force_ssl = ENV.fetch("FORCE_SSL", "true") == "true"
 
   # Skip http-to-https redirect for the default health check endpoint.
   config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
@@ -58,7 +57,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: ENV.fetch("HOST", "frankmega.example.com") }
+  config.action_mailer.default_url_options = { host: ENV.fetch("HOST") }
 
   # Specify outgoing SMTP server via environment variables.
   config.action_mailer.smtp_settings = {
@@ -81,8 +80,7 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
-    ENV.fetch("HOST", "frankmega.example.com"),
-    "localhost"
+    ENV.fetch("HOST")
   ]
 
   # Skip DNS rebinding protection for the default health check endpoint.

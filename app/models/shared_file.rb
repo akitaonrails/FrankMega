@@ -43,7 +43,11 @@ class SharedFile < ApplicationRecord
   end
 
   def increment_download!
-    increment!(:download_count)
+    # Atomic: only increments if still under the limit, returns true on success
+    self.class.where(id: id)
+        .where("download_count < max_downloads")
+        .where("expires_at > ?", Time.current)
+        .update_all("download_count = download_count + 1") == 1
   end
 
   def download_url_path

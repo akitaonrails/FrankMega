@@ -1,9 +1,9 @@
-Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+Rack::Attack.cache.store = Rails.cache
 
 security = Rails.application.config.x.security
 multiplier = security.rate_limit_multiplier || 1
 
-# Blocklist banned IPs
+# Blocklist banned IPs (cached — see Ban.banned?)
 Rack::Attack.blocklist("banned IPs") do |req|
   Ban.banned?(req.ip) if security.enable_banning
 end
@@ -20,9 +20,24 @@ Rack::Attack.throttle("logins/email", limit: (5 * multiplier), period: 1.minute)
   end
 end
 
-# Throttle download attempts by IP
+# Throttle 2FA OTP attempts by IP
+Rack::Attack.throttle("2fa/ip", limit: (5 * multiplier), period: 1.minute) do |req|
+  req.ip if req.path == "/two_factor_session" && req.post?
+end
+
+# Throttle download page views (GET) by IP
+Rack::Attack.throttle("downloads_get/ip", limit: (60 * multiplier), period: 1.minute) do |req|
+  req.ip if req.path.start_with?("/d/") && req.get?
+end
+
+# Throttle download attempts (POST) by IP
 Rack::Attack.throttle("downloads/ip", limit: (30 * multiplier), period: 1.minute) do |req|
   req.ip if req.path.start_with?("/d/") && req.post?
+end
+
+# Throttle registration attempts by IP
+Rack::Attack.throttle("registrations/ip", limit: (5 * multiplier), period: 1.minute) do |req|
+  req.ip if req.path.start_with?("/register/") && req.post?
 end
 
 # Throttle general requests

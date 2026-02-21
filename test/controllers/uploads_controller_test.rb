@@ -2,8 +2,8 @@ require "test_helper"
 
 class UploadsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user, email_address: "uploader@example.com", password: "password123")
-    post session_path, params: { email_address: "uploader@example.com", password: "password123" }
+    @user = create(:user, email_address: "uploader@example.com", password: "password123!safe")
+    post session_path, params: { email_address: "uploader@example.com", password: "password123!safe" }
   end
 
   test "shows upload form" do

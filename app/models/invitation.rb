@@ -30,7 +30,10 @@ class Invitation < ApplicationRecord
   end
 
   def redeem!(user)
-    update!(used_by: user, used_at: Time.current)
+    with_lock do
+      raise ActiveRecord::RecordInvalid, self unless pending?
+      update!(used_by: user, used_at: Time.current)
+    end
   end
 
   private

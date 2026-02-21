@@ -54,13 +54,23 @@ module Authentication
   end
 
   def after_authentication_url
-    session.delete(:return_to_after_authenticating) || root_url
+    url = session.delete(:return_to_after_authenticating)
+    if url.present? && safe_redirect_url?(url)
+      url
+    else
+      root_url
+    end
   end
 
   def start_new_session_for(user)
     user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |new_session|
       Current.session = new_session
-      cookies.signed.permanent[:session_id] = { value: new_session.id, httponly: true, same_site: :lax }
+      cookies.signed.permanent[:session_id] = {
+        value: new_session.id,
+        httponly: true,
+        same_site: :lax,
+        secure: Rails.env.production?
+      }
     end
   end
 
@@ -73,5 +83,13 @@ module Authentication
     unless current_user&.admin?
       redirect_to root_path, alert: "Not authorized."
     end
+  end
+
+  def safe_redirect_url?(url)
+    uri = URI.parse(url)
+    # Only allow relative paths or same-host URLs
+    uri.host.nil? || uri.host == request.host
+  rescue URI::InvalidURIError
+    false
   end
 end

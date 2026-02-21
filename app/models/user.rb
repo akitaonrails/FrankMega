@@ -10,6 +10,7 @@ class User < ApplicationRecord
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :password, length: { minimum: 12 }, allow_nil: true
   validates :role, inclusion: { in: %w[admin user] }
 
   scope :admins, -> { where(role: "admin") }
@@ -21,6 +22,10 @@ class User < ApplicationRecord
 
   def banned?
     banned
+  end
+
+  def sole_admin?
+    admin? && User.admins.count <= 1
   end
 
   def ban!
@@ -41,7 +46,16 @@ class User < ApplicationRecord
   def verify_otp(code)
     return false unless otp_secret.present?
     totp = ROTP::TOTP.new(otp_secret)
-    totp.verify(code, drift_behind: 30, drift_ahead: 30).present?
+    timestamp = totp.verify(code, drift_behind: 30, drift_ahead: 30)
+    return false unless timestamp
+
+    # Prevent OTP replay: reject if this code's timestamp was already used
+    if last_otp_at.present? && Time.at(timestamp) <= last_otp_at
+      return false
+    end
+
+    update_column(:last_otp_at, Time.at(timestamp))
+    true
   end
 
   def generate_otp_secret!
@@ -53,7 +67,7 @@ class User < ApplicationRecord
   end
 
   def disable_otp!
-    update!(otp_secret: nil, otp_required: false)
+    update!(otp_secret: nil, otp_required: false, last_otp_at: nil)
   end
 
   def has_passkeys?

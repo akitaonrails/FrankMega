@@ -12,7 +12,7 @@ Rails.application.configure do
     policy.base_uri    :self
   end
 
-  # Generate session nonces for importmap inline scripts.
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
+  # Generate a fresh nonce per request (not tied to session ID).
+  config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w[script-src]
 end

@@ -1,6 +1,8 @@
 # FrankMega
 
-Self-hosted, security-hardened file sharing service. Upload a file, get a time-limited download link with a counter, share it. Files auto-expire after a configurable TTL (max 24h) or when the download limit is reached.
+Self-hosted, security-hardened file sharing service designed for sharing files with family and friends. Upload a file, get a time-limited download link with a counter, share it. Files auto-expire after a configurable TTL (max 24h) or when the download limit is reached.
+
+Not intended for public-facing or large-scale deployments — the primary use case is a personal home server behind a Cloudflare Tunnel, where you control who gets an account via invite-only registration.
 
 Built with Ruby on Rails 8.1, SQLite3, Tailwind CSS. Zero external services required — no Redis, no Postgres, no S3.
 
@@ -52,8 +54,7 @@ SMTP_PORT=587
 SMTP_USERNAME=you@gmail.com
 SMTP_PASSWORD=your-app-password
 
-# Set to true when behind Cloudflare Tunnel (or any SSL-terminating proxy)
-# Leave false (default) for local Docker testing without TLS
+# SSL: defaults to true — set to false only for local Docker testing without TLS
 FORCE_SSL=true
 ```
 
@@ -121,6 +122,7 @@ Rate limits are 10x more lenient and IP banning is disabled by default. See `con
 | Ban duration                | 1 hour     | 1 minute    |
 | IP banning enabled          | yes        | no          |
 | Invalid hash attempts limit | 3          | 10          |
+| Minimum password length     | 12 chars   | 12 chars    |
 
 ## Running Tests
 

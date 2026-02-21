@@ -11,13 +11,15 @@ class RegistrationsController < ApplicationController
   def create
     @user = User.new(user_params)
 
-    if @user.save
+    ActiveRecord::Base.transaction do
+      @user.save!
       @invitation.redeem!(@user)
-      start_new_session_for @user
-      redirect_to root_path, notice: "Account created successfully."
-    else
-      render :new, status: :unprocessable_entity
     end
+
+    start_new_session_for @user
+    redirect_to root_path, notice: "Account created successfully."
+  rescue ActiveRecord::RecordInvalid
+    render :new, status: :unprocessable_entity
   end
 
   private

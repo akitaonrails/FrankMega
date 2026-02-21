@@ -6,7 +6,9 @@ class Ban < ApplicationRecord
   scope :expired, -> { where("expires_at <= ?", Time.current) }
 
   def self.banned?(ip)
-    active.exists?(ip_address: ip)
+    Rails.cache.fetch("ban:#{ip}", expires_in: 1.minute) do
+      active.exists?(ip_address: ip)
+    end
   end
 
   def self.ban!(ip, reason: nil, duration: 1.hour)
@@ -14,7 +16,9 @@ class Ban < ApplicationRecord
       ip_address: ip,
       reason: reason,
       expires_at: duration.from_now
-    )
+    ).tap do
+      Rails.cache.delete("ban:#{ip}")
+    end
   end
 
   def active?

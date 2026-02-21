@@ -3,8 +3,8 @@ require "test_helper"
 module Admin
   class UsersControllerTest < ActionDispatch::IntegrationTest
     setup do
-      @admin = create(:user, :admin, email_address: "admin@example.com", password: "password123")
-      post session_path, params: { email_address: "admin@example.com", password: "password123" }
+      @admin = create(:user, :admin, email_address: "admin@example.com", password: "password123!safe")
+      post session_path, params: { email_address: "admin@example.com", password: "password123!safe" }
     end
 
     test "admin can access users list" do
@@ -40,8 +40,8 @@ module Admin
     test "non-admin redirected from admin panel" do
       delete session_path # logout admin
 
-      regular = create(:user, email_address: "user@example.com", password: "password123")
-      post session_path, params: { email_address: "user@example.com", password: "password123" }
+      regular = create(:user, email_address: "user@example.com", password: "password123!safe")
+      post session_path, params: { email_address: "user@example.com", password: "password123!safe" }
 
       get admin_users_path
       assert_redirected_to root_path

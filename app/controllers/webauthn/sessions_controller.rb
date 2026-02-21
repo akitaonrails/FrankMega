@@ -3,12 +3,14 @@ module Webauthn
     allow_unauthenticated_access
 
     def new
-      get_options = WebAuthn::Credential.options_for_get(
-        allow: WebauthnCredential.where(
-          user: User.find_by(email_address: params[:email_address])
-        ).pluck(:external_id)
-      )
+      user = User.find_by(email_address: params[:email_address])
 
+      # Always return options regardless of whether user exists or has passkeys.
+      # This prevents email enumeration — attacker can't distinguish
+      # "no such user" from "user has no passkeys".
+      credential_ids = user&.webauthn_credentials&.pluck(:external_id) || []
+
+      get_options = WebAuthn::Credential.options_for_get(allow: credential_ids)
       session[:webauthn_authentication_challenge] = get_options.challenge
 
       render json: get_options

@@ -19,6 +19,8 @@ class SessionsController < ApplicationController
     end
 
     if user.otp_required?
+      # Reset session to prevent fixation, then store pending user
+      reset_session
       session[:pending_user_id] = user.id
       redirect_to new_two_factor_session_path
       return

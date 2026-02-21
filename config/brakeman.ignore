@@ -1,7 +1,7 @@
 {
   "ignored_warnings": [
     {
-      "fingerprint": "admin_users_controller_role_mass_assignment",
+      "fingerprint": "8e89f9dbdcb5f746089fdfc78b350b62f8adc7b36045341b9320fb0bc3dbe972",
       "note": "Intentional: only admin users can access this controller and change roles"
     }
   ],

@@ -16,10 +16,10 @@ class DownloadsController < ApplicationController
     if @shared_file.nil?
       record_invalid_access
       render plain: "Not Found", status: :not_found
-    elsif !@shared_file.active?
+    elsif !@shared_file.increment_download!
       render plain: "Gone", status: :gone
     else
-      @shared_file.increment_download!
+      @shared_file.reload
       DownloadNotificationJob.perform_later(@shared_file.id)
       redirect_to rails_blob_path(@shared_file.file, disposition: "attachment")
     end

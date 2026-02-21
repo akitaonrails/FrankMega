@@ -1,5 +1,6 @@
 class TwoFactorSessionsController < ApplicationController
   allow_unauthenticated_access
+  rate_limit to: 5, within: 1.minute, only: :create, with: -> { redirect_to new_two_factor_session_path, alert: "Too many attempts. Try again later." }
 
   before_action :ensure_pending_user
 

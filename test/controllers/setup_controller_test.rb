@@ -10,8 +10,8 @@ class SetupControllerTest < ActionDispatch::IntegrationTest
     post setup_path, params: {
       user: {
         email_address: "admin@example.com",
-        password: "password123",
-        password_confirmation: "password123"
+        password: "password123!safe",
+        password_confirmation: "password123!safe"
       }
     }
     assert_redirected_to root_path
