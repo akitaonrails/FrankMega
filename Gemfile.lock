@@ -348,7 +348,7 @@ GEM
     secure_headers (7.2.0)
       cgi (>= 0.1)
     securerandom (0.4.1)
-    selenium-webdriver (4.40.0)
+    selenium-webdriver (4.41.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
