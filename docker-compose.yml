@@ -21,6 +21,7 @@ services:
       - FORCE_SSL=${FORCE_SSL:-true}
       # Storage
       - STORAGE_PATH=/rails/storage/uploads
+      - USER_DISK_QUOTA_BYTES=${USER_DISK_QUOTA_BYTES:-5368709120}
       # SMTP (optional — leave blank to disable email delivery)
       - SMTP_ADDRESS=${SMTP_ADDRESS:-localhost}
       - SMTP_PORT=${SMTP_PORT:-587}

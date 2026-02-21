@@ -17,6 +17,15 @@
             {}, class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
       </div>
 
+      <div>
+        <%= f.label :disk_quota_gb, "Disk Quota (GB)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <% quota_gb = @user.disk_quota_bytes ? (@user.disk_quota_bytes.to_f / 1.gigabyte).round(1) : nil %>
+        <%= f.number_field :disk_quota_gb, value: quota_gb, step: 0.1, min: 0.1,
+            placeholder: "#{(Rails.application.config.x.security.default_disk_quota_bytes.to_f / 1.gigabyte).round(1)} (system default)",
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Leave blank to use system default</p>
+      </div>
+
       <div class="flex gap-4">
         <%= f.submit "Update", class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
         <%= link_to "Cancel", admin_user_path(@user), class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>

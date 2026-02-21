@@ -1,8 +1,8 @@
 {
   "ignored_warnings": [
     {
-      "fingerprint": "8e89f9dbdcb5f746089fdfc78b350b62f8adc7b36045341b9320fb0bc3dbe972",
-      "note": "Intentional: only admin users can access this controller and change roles"
+      "fingerprint": "5e27ea82d9cb6b6bbae8efc7d37b18c30d5b2b4a69e935eecfb461a1c6919e84",
+      "note": "Intentional: only admin users can access this controller and change roles/quotas"
     }
   ],
   "updated": "2026-02-21",

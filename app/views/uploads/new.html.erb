@@ -4,6 +4,24 @@
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Upload File</h1>
 
+    <%# Quota usage bar %>
+    <% usage_pct = @disk_quota.positive? ? ((@storage_used.to_f / @disk_quota) * 100).clamp(0, 100) : 0 %>
+    <% bar_color = usage_pct > 90 ? "bg-danger" : (usage_pct > 70 ? "bg-warning" : "bg-success") %>
+    <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Storage</span>
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+          <%= number_to_human_size(@storage_used) %> / <%= number_to_human_size(@disk_quota) %> used
+        </span>
+      </div>
+      <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+        <div class="<%= bar_color %> h-2.5 rounded-full transition-all duration-300" style="width: <%= usage_pct %>%"></div>
+      </div>
+      <% if usage_pct > 90 %>
+        <p class="mt-2 text-xs text-danger font-medium">Storage almost full. Delete files to free up space.</p>
+      <% end %>
+    </div>
+
     <% if flash[:notice] %>
       <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-4 text-sm text-green-700 dark:text-green-300">
         <%= flash[:notice] %>
@@ -46,7 +64,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <%= f.label :max_downloads, "Max Downloads", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-          <%= f.number_field :max_downloads, min: 1, max: 100, value: 5,
+          <%= f.number_field :max_downloads, min: 1, max: 10, value: 5,
               class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
         </div>
         <div>

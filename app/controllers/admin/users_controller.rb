@@ -67,7 +67,12 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:email_address, :role)
+      permitted = params.require(:user).permit(:email_address, :role, :disk_quota_gb)
+      if permitted.key?(:disk_quota_gb)
+        gb_value = permitted.delete(:disk_quota_gb)
+        permitted[:disk_quota_bytes] = gb_value.present? ? (gb_value.to_f * 1.gigabyte).round : nil
+      end
+      permitted
     end
 
     def removing_last_admin?

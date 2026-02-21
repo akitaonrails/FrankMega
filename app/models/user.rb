@@ -73,4 +73,21 @@ class User < ApplicationRecord
   def has_passkeys?
     webauthn_credentials.exists?
   end
+
+  def storage_used
+    shared_files.sum(:file_size)
+  end
+
+  def disk_quota
+    disk_quota_bytes || Rails.application.config.x.security.default_disk_quota_bytes
+  end
+
+  def storage_remaining
+    [ disk_quota - storage_used, 0 ].max
+  end
+
+  def can_upload?(file_size)
+    grace = Rails.application.config.x.security.disk_quota_grace_bytes
+    (storage_used + file_size) <= (disk_quota + grace)
+  end
 end

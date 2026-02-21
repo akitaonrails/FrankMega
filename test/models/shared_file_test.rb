@@ -24,8 +24,8 @@ class SharedFileTest < ActiveSupport::TestCase
 
   test "validates max_downloads range" do
     assert_not build(:shared_file, max_downloads: 0).valid?
-    assert_not build(:shared_file, max_downloads: 101).valid?
-    assert build(:shared_file, max_downloads: 50).valid?
+    assert_not build(:shared_file, max_downloads: 11).valid?
+    assert build(:shared_file, max_downloads: 10).valid?
   end
 
   test "validates ttl_hours range" do
@@ -85,5 +85,26 @@ class SharedFileTest < ActiveSupport::TestCase
     assert_not_includes SharedFile.inactive, active
     assert_includes SharedFile.inactive, expired
     assert_includes SharedFile.inactive, exhausted
+  end
+
+  test "rejects upload when over quota plus grace" do
+    user = create(:user, disk_quota_bytes: 1.gigabyte)
+    create(:shared_file, user: user, file_size: 950.megabytes)
+    file = build(:shared_file, user: user, file_size: 200.megabytes)
+    assert_not file.valid?
+    assert file.errors[:base].any? { |msg| msg.include?("storage quota") }
+  end
+
+  test "allows upload within grace buffer" do
+    user = create(:user, disk_quota_bytes: 1.gigabyte)
+    create(:shared_file, user: user, file_size: 950.megabytes)
+    file = build(:shared_file, user: user, file_size: 150.megabytes)
+    assert file.valid?
+  end
+
+  test "allows upload when under quota" do
+    user = create(:user, disk_quota_bytes: 1.gigabyte)
+    file = build(:shared_file, user: user, file_size: 500.megabytes)
+    assert file.valid?
   end
 end

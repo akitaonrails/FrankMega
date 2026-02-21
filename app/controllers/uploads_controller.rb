@@ -3,6 +3,8 @@ class UploadsController < ApplicationController
     @shared_file = SharedFile.new(max_downloads: 5, ttl_hours: 24)
     @active_files = current_user.shared_files.active.order(created_at: :desc)
     @inactive_files = current_user.shared_files.inactive.order(created_at: :desc)
+    @storage_used = current_user.storage_used
+    @disk_quota = current_user.disk_quota
   end
 
   def create
@@ -19,6 +21,10 @@ class UploadsController < ApplicationController
     if @shared_file.save
       redirect_to upload_path(@shared_file)
     else
+      @active_files = current_user.shared_files.active.order(created_at: :desc)
+      @inactive_files = current_user.shared_files.inactive.order(created_at: :desc)
+      @storage_used = current_user.storage_used
+      @disk_quota = current_user.disk_quota
       render :new, status: :unprocessable_entity
     end
   end

@@ -12,4 +12,7 @@ Rails.application.config.x.security = ActiveSupport::OrderedOptions.new.tap do |
     config.max_invalid_hash_attempts = 10
     config.max_404_attempts = 10
   end
+
+  config.default_disk_quota_bytes = ENV.fetch("USER_DISK_QUOTA_BYTES", 5.gigabytes.to_s).to_i
+  config.disk_quota_grace_bytes = 100.megabytes
 end

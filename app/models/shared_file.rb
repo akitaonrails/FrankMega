@@ -6,7 +6,7 @@ class SharedFile < ApplicationRecord
   before_validation :set_expiry, on: :create
 
   validates :download_hash, presence: true, uniqueness: true
-  validates :max_downloads, presence: true, numericality: { in: 1..100 }
+  validates :max_downloads, presence: true, numericality: { in: 1..10 }
   validates :download_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :ttl_hours, presence: true, numericality: { in: 1..24 }
   validates :expires_at, presence: true
@@ -15,6 +15,7 @@ class SharedFile < ApplicationRecord
   validates :file_size, presence: true, numericality: { less_than_or_equal_to: 1.gigabyte }
   validate :file_type_allowed, on: :create
   validate :file_attached
+  validate :within_user_quota, on: :create
 
   scope :active, -> { where("expires_at > ? AND download_count < max_downloads", Time.current) }
   scope :expired, -> { where("expires_at <= ?", Time.current) }
@@ -75,5 +76,13 @@ class SharedFile < ApplicationRecord
 
   def file_attached
     errors.add(:file, "must be attached") unless file.attached?
+  end
+
+  def within_user_quota
+    return unless user && file_size.present?
+    unless user.can_upload?(file_size)
+      quota_display = ActionController::Base.helpers.number_to_human_size(user.disk_quota)
+      errors.add(:base, "Upload would exceed your storage quota (#{quota_display} limit)")
+    end
   end
 end

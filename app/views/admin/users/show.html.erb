@@ -42,6 +42,15 @@
         <dt class="text-gray-500 dark:text-gray-400">Files</dt>
         <dd class="font-medium"><%= @user.shared_files.count %></dd>
       </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">Storage</dt>
+        <dd class="font-medium">
+          <%= number_to_human_size(@user.storage_used) %> / <%= number_to_human_size(@user.disk_quota) %>
+          <% if @user.disk_quota_bytes %>
+            <span class="text-xs text-gray-400">(custom)</span>
+          <% end %>
+        </dd>
+      </div>
     </dl>
   </div>
 

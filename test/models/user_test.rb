@@ -83,4 +83,55 @@ class UserTest < ActiveSupport::TestCase
     assert user.otp_provisioning_uri.present?
     assert user.otp_provisioning_uri.include?("otpauth://")
   end
+
+  test "storage_used returns sum of file sizes" do
+    user = create(:user)
+    create(:shared_file, user: user, file_size: 1000)
+    create(:shared_file, user: user, file_size: 2000)
+    assert_equal 3000, user.storage_used
+  end
+
+  test "storage_used returns 0 with no files" do
+    user = create(:user)
+    assert_equal 0, user.storage_used
+  end
+
+  test "disk_quota returns system default when no override" do
+    user = build(:user, disk_quota_bytes: nil)
+    assert_equal Rails.application.config.x.security.default_disk_quota_bytes, user.disk_quota
+  end
+
+  test "disk_quota returns per-user override when set" do
+    user = build(:user, disk_quota_bytes: 10.gigabytes)
+    assert_equal 10.gigabytes, user.disk_quota
+  end
+
+  test "can_upload? allows within quota" do
+    user = create(:user, disk_quota_bytes: 1.gigabyte)
+    assert user.can_upload?(500.megabytes)
+  end
+
+  test "can_upload? allows within grace buffer" do
+    user = create(:user, disk_quota_bytes: 1.gigabyte)
+    create(:shared_file, user: user, file_size: 950.megabytes)
+    assert user.can_upload?(150.megabytes)
+  end
+
+  test "can_upload? rejects over quota plus grace" do
+    user = create(:user, disk_quota_bytes: 1.gigabyte)
+    create(:shared_file, user: user, file_size: 950.megabytes)
+    assert_not user.can_upload?(200.megabytes)
+  end
+
+  test "storage_remaining returns correct value" do
+    user = create(:user, disk_quota_bytes: 1.gigabyte)
+    create(:shared_file, user: user, file_size: 300.megabytes)
+    assert_equal 1.gigabyte - 300.megabytes, user.storage_remaining
+  end
+
+  test "storage_remaining never goes negative" do
+    user = create(:user, disk_quota_bytes: 100)
+    create(:shared_file, user: user, file_size: 200)
+    assert_equal 0, user.storage_remaining
+  end
 end
