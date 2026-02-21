@@ -13,7 +13,7 @@ class DownloadsController < ApplicationController
     end
   end
 
-  def create
+  def file
     if @shared_file.nil?
       record_invalid_access
       render plain: "Not Found", status: :not_found

@@ -5,7 +5,7 @@
       "note": "Intentional: only admin users can access this controller and change roles/quotas"
     },
     {
-      "fingerprint": "62abb8f23d642def345fc4e903c5bc07b4a26341b44f8404f6293bd20e3ac5f7",
+      "fingerprint": "d991a43cc168c94a185093d8659adba6e71b73e814cc9cba8196bcbd0b949783",
       "note": "File key comes from ActiveStorage blob, not user input — path resolves within storage directory only"
     }
   ],

@@ -9,7 +9,7 @@
         </svg>
       </div>
 
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2"><%= @shared_file.original_filename %></h2>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 truncate" title="<%= @shared_file.original_filename %>"><%= truncate(@shared_file.original_filename, length: 60) %></h2>
 
       <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6 text-sm">
         <dl class="space-y-2">
@@ -24,9 +24,9 @@
         </dl>
       </div>
 
-      <%= button_to t("downloads.show.download"), download_file_path(hash: @shared_file.download_hash),
-          form: { data: { turbo: false } },
-          class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer text-lg" %>
+      <%= link_to t("downloads.show.download"), download_file_path(hash: @shared_file.download_hash),
+          class: "block w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer text-lg text-center",
+          data: { turbo: false } %>
 
       <p class="mt-4 text-xs text-gray-400 dark:text-gray-500"><%= t("downloads.show.expiry_note") %></p>
     </div>
