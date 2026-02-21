@@ -57,12 +57,23 @@ SMTP_PASSWORD=your-app-password
 FORCE_SSL=true
 ```
 
-### 3. Build and start
+### 3. Start the container
+
+**Option A: Pull from Docker Hub (recommended)**
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+**Option B: Build from source**
 
 ```bash
 docker compose build
 docker compose up -d
 ```
+
+The pre-built image is available at [`akitaonrails/frankmega`](https://hub.docker.com/r/akitaonrails/frankmega) on Docker Hub.
 
 The app listens on port **3000** (mapped from container port 80 via Thruster). On first visit, you'll be prompted to create the admin account.
 

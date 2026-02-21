@@ -1,5 +1,6 @@
 services:
   web:
+    image: akitaonrails/frankmega:latest
     build: .
     ports:
       - "3000:80"
