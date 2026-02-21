@@ -14,18 +14,21 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
   test "returns 404 for invalid hash" do
     get download_path(hash: "nonexistent_hash")
     assert_response :not_found
+    assert_match "Link Not Found", response.body
   end
 
   test "returns 410 for expired file" do
     expired = create(:shared_file, :expired)
     get download_path(hash: expired.download_hash)
     assert_response :gone
+    assert_match "Link Expired", response.body
   end
 
   test "returns 410 for exhausted downloads" do
     exhausted = create(:shared_file, :exhausted)
     get download_path(hash: exhausted.download_hash)
     assert_response :gone
+    assert_match "Link Expired", response.body
   end
 
   test "download increments counter" do

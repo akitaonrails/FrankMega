@@ -7,18 +7,18 @@ class DownloadsController < ApplicationController
   def show
     if @shared_file.nil?
       record_invalid_access
-      render plain: "Not Found", status: :not_found
+      render "not_found", status: :not_found
     elsif !@shared_file.active?
-      render plain: "Gone", status: :gone
+      render "expired", status: :gone
     end
   end
 
   def file
     if @shared_file.nil?
       record_invalid_access
-      render plain: "Not Found", status: :not_found
+      render "not_found", status: :not_found
     elsif !@shared_file.increment_download!
-      render plain: "Gone", status: :gone
+      render "expired", status: :gone
     else
       @shared_file.reload
       DownloadNotificationJob.perform_later(@shared_file.id)
@@ -32,11 +32,11 @@ class DownloadsController < ApplicationController
   def preview
     if @shared_file.nil?
       record_invalid_access
-      render plain: "Not Found", status: :not_found
+      render plain: "", status: :not_found
     elsif !@shared_file.active?
-      render plain: "Gone", status: :gone
+      render plain: "", status: :gone
     elsif !@shared_file.previewable?
-      render plain: "Not Found", status: :not_found
+      render plain: "", status: :not_found
     else
       send_file ActiveStorage::Blob.service.path_for(@shared_file.file.key),
                 filename: @shared_file.original_filename,
@@ -54,7 +54,7 @@ class DownloadsController < ApplicationController
   def check_owner_not_banned
     return if @shared_file.nil?
 
-    render plain: "Gone", status: :gone if @shared_file.user.banned?
+    render "expired", status: :gone if @shared_file.user.banned?
   end
 
   def record_invalid_access

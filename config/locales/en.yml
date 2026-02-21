@@ -148,6 +148,12 @@ en:
       last_updated: "Last updated: %{date}"
 
   downloads:
+    expired:
+      heading: "Link Expired"
+      message: "This download link is no longer available. It may have expired or reached its download limit."
+    not_found:
+      heading: "Link Not Found"
+      message: "This download link doesn't exist. Please check the URL and try again."
     show:
       size: "Size"
       downloads_remaining: "Downloads remaining"
