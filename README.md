@@ -6,6 +6,8 @@ Not intended for public-facing or large-scale deployments — the primary use ca
 
 Built with Ruby on Rails 8.1, SQLite3, Tailwind CSS. Zero external services required — no Redis, no Postgres, no S3.
 
+![Upload screen](docs/upload_screen.png)
+
 ## Features
 
 - **Time-limited sharing** — configurable TTL (1–24h) and download counter (1–100)
@@ -22,9 +24,22 @@ Built with Ruby on Rails 8.1, SQLite3, Tailwind CSS. Zero external services requ
 - **Real-time notifications** — Turbo Streams notify uploaders when their files are downloaded
 - **Auto-cleanup** — background jobs purge expired files and bans every 15 minutes
 
-## Production Deployment (Docker Compose)
+## Production Deployment (Docker Compose + Cloudflare Tunnel)
 
-### 1. Generate secrets
+The recommended setup runs FrankMega behind a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) — no open ports, no self-managed TLS certificates, free DDoS protection. The included `docker-compose.yml` runs both the app and the `cloudflared` connector as a sidecar.
+
+### 1. Create a Cloudflare Tunnel
+
+1. In the [Cloudflare Zero Trust dashboard](https://one.dash.cloudflare.com/), go to **Networks > Tunnels** and create a new tunnel
+2. Choose **Cloudflared** as the connector type
+3. Copy the **tunnel token** (you'll need it for the `.env` file)
+4. Add a public hostname rule:
+   - **Subdomain:** `frankmega` (or your choice)
+   - **Domain:** `yourdomain.com`
+   - **Service:** `http://web:80` (this is the Docker internal hostname)
+5. Under your domain's **SSL/TLS** settings, set encryption mode to **Full**
+
+### 2. Generate secrets
 
 ```bash
 # Secret key base
@@ -34,14 +49,15 @@ docker run --rm ruby:3.4.8-slim ruby -e "puts SecureRandom.hex(64)"
 docker run --rm ruby:3.4.8-slim ruby -e "3.times { puts SecureRandom.hex(32) }"
 ```
 
-### 2. Create a `.env` file
+### 3. Create a `.env` file
 
-> **Important:** All variables below are **required** — the app will refuse to boot if any are missing. `RAILS_MASTER_KEY` must be the value from `config/master.key` in your repo (created by `rails new`). Do **not** generate a new one — it must match the key that encrypted `config/credentials.yml.enc`.
+> **Important:** `RAILS_MASTER_KEY` must be the exact value from `config/master.key` in the repo (32 hex characters). Do **not** generate a new one — it must match the key that encrypted `config/credentials.yml.enc`. All other variables below are also required.
 
 ```env
 SECRET_KEY_BASE=<generated above>
-RAILS_MASTER_KEY=<copy from config/master.key>
+RAILS_MASTER_KEY=<copy exact contents of config/master.key>
 
+# Must match the domain configured in the Cloudflare Tunnel
 HOST=frankmega.yourdomain.com
 WEBAUTHN_ORIGIN=https://frankmega.yourdomain.com
 WEBAUTHN_RP_ID=frankmega.yourdomain.com
@@ -50,8 +66,8 @@ ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=<first key>
 ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=<second key>
 ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=<third key>
 
-# SSL: defaults to true — set to false ONLY for local Docker testing without TLS
-FORCE_SSL=true
+# Cloudflare Tunnel token (from Zero Trust dashboard)
+TUNNEL_TOKEN=<your tunnel token>
 
 # SMTP (optional — omit or leave blank to disable email delivery)
 SMTP_ADDRESS=smtp.gmail.com
@@ -60,16 +76,15 @@ SMTP_USERNAME=you@gmail.com
 SMTP_PASSWORD=your-app-password
 ```
 
-### 3. Start the container
+> **WebAuthn:** The `HOST`, `WEBAUTHN_ORIGIN`, and `WEBAUTHN_RP_ID` must match the domain in your Cloudflare Tunnel. Passkey registration/authentication will fail silently if these don't match.
 
-**Option A: Pull from Docker Hub (recommended)**
+### 4. Start the stack
 
 ```bash
-docker compose pull
 docker compose up -d
 ```
 
-**Option B: Build from source**
+Or build from source instead of pulling from Docker Hub:
 
 ```bash
 docker compose build
@@ -78,23 +93,13 @@ docker compose up -d
 
 The pre-built image is available at [`akitaonrails/frankmega`](https://hub.docker.com/r/akitaonrails/frankmega) on Docker Hub.
 
-The app listens on port **3100** (mapped from container port 80 via Thruster). On first visit, you'll be prompted to create the admin account.
+On first visit to `https://frankmega.yourdomain.com`, you'll be prompted to create the admin account.
 
 Data is persisted in two Docker volumes: `uploads` (files) and `db_data` (SQLite databases).
 
-### 4. Cloudflare Tunnel setup
-
-1. In the [Cloudflare Zero Trust dashboard](https://one.dash.cloudflare.com/), create a tunnel pointing to your server
-2. Add a public hostname rule:
-   - **Subdomain:** `frankmega` (or your choice)
-   - **Domain:** `yourdomain.com`
-   - **Service:** `http://localhost:3100`
-3. Under **SSL/TLS** settings for the domain, set encryption mode to **Full**
-4. `FORCE_SSL` defaults to `true` — Rails enables `assume_ssl` and `force_ssl` so it trusts the `X-Forwarded-Proto` header from Cloudflare. Only set `FORCE_SSL=false` if testing locally without TLS.
-
 The app automatically trusts [Cloudflare IP ranges](https://www.cloudflare.com/ips/) so that rate limiting and IP banning work against real client IPs, not Cloudflare's.
 
-> **Important:** The `HOST`, `WEBAUTHN_ORIGIN`, and `WEBAUTHN_RP_ID` env vars must match the domain configured in Cloudflare. WebAuthn will fail silently if these don't match.
+> **Local testing without Cloudflare:** The web container also exposes port 3100 for direct access (`http://localhost:3100`). Set `FORCE_SSL=false` in your `.env` if testing locally without TLS.
 
 ## Local Development
 

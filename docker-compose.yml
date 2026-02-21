@@ -2,6 +2,7 @@ services:
   web:
     image: akitaonrails/frankmega:latest
     build: .
+    # Port 3100 exposed for local/direct access — primary access is via Cloudflare Tunnel
     ports:
       - "3100:80"
     volumes:
@@ -29,6 +30,15 @@ services:
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USERNAME=${SMTP_USERNAME}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
+    restart: unless-stopped
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - web
     restart: unless-stopped
 
 volumes:
