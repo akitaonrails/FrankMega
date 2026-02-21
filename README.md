@@ -35,7 +35,7 @@ docker run --rm ruby:3.4.8-slim ruby -e "3.times { puts SecureRandom.hex(32) }"
 
 ### 2. Create a `.env` file
 
-> **Important:** `RAILS_MASTER_KEY` must be the value from `config/master.key` in your repo (created by `rails new`). Do **not** generate a new one — it must match the key that encrypted `config/credentials.yml.enc`.
+> **Important:** All variables below are **required** — the app will refuse to boot if any are missing. `RAILS_MASTER_KEY` must be the value from `config/master.key` in your repo (created by `rails new`). Do **not** generate a new one — it must match the key that encrypted `config/credentials.yml.enc`.
 
 ```env
 SECRET_KEY_BASE=<generated above>
@@ -49,13 +49,14 @@ ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=<first key>
 ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=<second key>
 ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=<third key>
 
+# SSL: defaults to true — set to false ONLY for local Docker testing without TLS
+FORCE_SSL=true
+
+# SMTP (optional — omit or leave blank to disable email delivery)
 SMTP_ADDRESS=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USERNAME=you@gmail.com
 SMTP_PASSWORD=your-app-password
-
-# SSL: defaults to true — set to false only for local Docker testing without TLS
-FORCE_SSL=true
 ```
 
 ### 3. Start the container
@@ -88,7 +89,7 @@ Data is persisted in two Docker volumes: `uploads` (files) and `db_data` (SQLite
    - **Domain:** `yourdomain.com`
    - **Service:** `http://localhost:3100`
 3. Under **SSL/TLS** settings for the domain, set encryption mode to **Full**
-4. Set `FORCE_SSL=true` in your `.env` — this enables `assume_ssl` and `force_ssl` so Rails trusts the `X-Forwarded-Proto` header from Cloudflare
+4. `FORCE_SSL` defaults to `true` — Rails enables `assume_ssl` and `force_ssl` so it trusts the `X-Forwarded-Proto` header from Cloudflare. Only set `FORCE_SSL=false` if testing locally without TLS.
 
 The app automatically trusts [Cloudflare IP ranges](https://www.cloudflare.com/ips/) so that rate limiting and IP banning work against real client IPs, not Cloudflare's.
 
