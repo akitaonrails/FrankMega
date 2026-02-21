@@ -12,15 +12,7 @@ SecureHeaders::Configuration.default do |config|
   config.x_permitted_cross_domain_policies = "none"
   config.referrer_policy = %w[strict-origin-when-cross-origin]
 
-  config.csp = {
-    default_src: %w['self'],
-    script_src: %w['self'],
-    style_src: %w['self' 'unsafe-inline'],
-    img_src: %w['self' data:],
-    font_src: %w['self'],
-    connect_src: %w['self'],
-    frame_ancestors: %w['none'],
-    form_action: %w['self'],
-    base_uri: %w['self']
-  }
+  # CSP is handled by Rails built-in (config/initializers/content_security_policy.rb)
+  # which supports nonces for importmap inline scripts.
+  config.csp = SecureHeaders::OPT_OUT
 end
