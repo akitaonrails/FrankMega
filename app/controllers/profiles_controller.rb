@@ -17,6 +17,16 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def destroy
+    if current_user.sole_admin?
+      redirect_to profile_path, alert: t("flash.profiles.destroy.sole_admin")
+    else
+      current_user.destroy
+      reset_session
+      redirect_to new_session_path, notice: t("flash.profiles.destroy.notice")
+    end
+  end
+
   private
 
   def profile_params

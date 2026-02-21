@@ -36,6 +36,7 @@ pt-BR:
       download: "Baixar"
     confirm:
       delete_file: "Excluir este arquivo?"
+      delete_account: "Tem certeza que deseja excluir permanentemente sua conta? Todos os seus arquivos e dados serão destruídos. Esta ação não pode ser desfeita."
       revoke_invitation: "Revogar este convite?"
       remove_passkey: "Remover esta passkey?"
       disable_2fa: "Tem certeza que deseja desativar o 2FA?"
@@ -112,6 +113,9 @@ pt-BR:
       no_passkeys: "Nenhuma passkey registrada. Adicione uma para login sem senha."
       active_sessions: "Sessões Ativas"
       current_session: "(atual)"
+      delete_account: "Excluir Conta"
+      delete_account_warning: "Exclua permanentemente sua conta e todos os dados associados, incluindo arquivos enviados, sessões e passkeys. Esta ação não pode ser desfeita."
+      delete_account_button: "Excluir Minha Conta"
 
   uploads:
     new:
@@ -270,6 +274,9 @@ pt-BR:
     profiles:
       update:
         notice: "Perfil atualizado."
+      destroy:
+        notice: "Sua conta foi excluída."
+        sole_admin: "Não é possível excluir a única conta de administrador."
     uploads:
       destroy:
         notice: "Arquivo excluído."

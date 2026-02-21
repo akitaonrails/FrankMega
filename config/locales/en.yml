@@ -36,6 +36,7 @@ en:
       download: "Download"
     confirm:
       delete_file: "Delete this file?"
+      delete_account: "Are you sure you want to permanently delete your account? All your files and data will be destroyed. This cannot be undone."
       revoke_invitation: "Revoke this invitation?"
       remove_passkey: "Remove this passkey?"
       disable_2fa: "Are you sure you want to disable 2FA?"
@@ -112,6 +113,9 @@ en:
       no_passkeys: "No passkeys registered. Add one for passwordless login."
       active_sessions: "Active Sessions"
       current_session: "(current)"
+      delete_account: "Delete Account"
+      delete_account_warning: "Permanently delete your account and all associated data, including uploaded files, sessions, and passkeys. This action cannot be undone."
+      delete_account_button: "Delete My Account"
 
   uploads:
     new:
@@ -270,6 +274,9 @@ en:
     profiles:
       update:
         notice: "Profile updated."
+      destroy:
+        notice: "Your account has been deleted."
+        sole_admin: "Cannot delete the only admin account."
     uploads:
       destroy:
         notice: "File deleted."

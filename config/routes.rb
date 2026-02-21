@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   post "register/:code", to: "registrations#create"
 
   # Profile
-  resource :profile, only: %i[show update]
+  resource :profile, only: %i[show update destroy]
 
   # File uploads (authenticated)
   resources :uploads, only: %i[new create show destroy]

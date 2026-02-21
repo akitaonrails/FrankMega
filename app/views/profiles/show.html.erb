@@ -112,4 +112,13 @@
       <% end %>
     </div>
   </div>
+
+  <%# Delete Account %>
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6 border border-red-200 dark:border-red-800">
+    <h2 class="text-xl font-semibold text-danger mb-2"><%= t("profiles.show.delete_account") %></h2>
+    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4"><%= t("profiles.show.delete_account_warning") %></p>
+    <%= button_to t("profiles.show.delete_account_button"), profile_path, method: :delete,
+        class: "py-2 px-4 bg-danger hover:bg-red-700 text-white font-semibold rounded-lg transition-colors cursor-pointer",
+        data: { turbo_confirm: t("shared.confirm.delete_account") } %>
+  </div>
 </div>

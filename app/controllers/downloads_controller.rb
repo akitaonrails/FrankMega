@@ -2,6 +2,7 @@ class DownloadsController < ApplicationController
   allow_unauthenticated_access
 
   before_action :find_shared_file
+  before_action :check_owner_not_banned
 
   def show
     if @shared_file.nil?
@@ -28,7 +29,13 @@ class DownloadsController < ApplicationController
   private
 
   def find_shared_file
-    @shared_file = SharedFile.find_by(download_hash: params[:hash])
+    @shared_file = SharedFile.includes(:user).find_by(download_hash: params[:hash])
+  end
+
+  def check_owner_not_banned
+    return if @shared_file.nil?
+
+    render plain: "Gone", status: :gone if @shared_file.user.banned?
   end
 
   def record_invalid_access

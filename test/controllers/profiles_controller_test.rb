@@ -38,4 +38,38 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     get profile_path
     assert_redirected_to new_session_path
   end
+
+  test "deletes own account" do
+    assert_difference "User.count", -1 do
+      delete profile_path
+    end
+    assert_redirected_to new_session_path
+    assert_nil User.find_by(id: @user.id)
+  end
+
+  test "deletes associated files when account deleted" do
+    create(:shared_file, user: @user)
+    assert_difference "SharedFile.count", -1 do
+      delete profile_path
+    end
+  end
+
+  test "sole admin cannot delete own account" do
+    admin = create(:user, :admin, email_address: "admin@example.com", password: "password123!safe")
+    delete session_path
+    post session_path, params: { email_address: "admin@example.com", password: "password123!safe" }
+
+    assert_no_difference "User.count" do
+      delete profile_path
+    end
+    assert_redirected_to profile_path
+    follow_redirect!
+    assert_match I18n.t("flash.profiles.destroy.sole_admin"), response.body
+  end
+
+  test "requires authentication to delete account" do
+    delete session_path
+    delete profile_path
+    assert_redirected_to new_session_path
+  end
 end

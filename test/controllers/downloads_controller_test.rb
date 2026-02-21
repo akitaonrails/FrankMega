@@ -44,4 +44,23 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
     post download_file_path(hash: expired.download_hash)
     assert_response :gone
   end
+
+  test "returns 410 for banned user's file on show" do
+    @shared_file.user.ban!
+    get download_path(hash: @shared_file.download_hash)
+    assert_response :gone
+  end
+
+  test "returns 410 for banned user's file on download" do
+    @shared_file.user.ban!
+    post download_file_path(hash: @shared_file.download_hash)
+    assert_response :gone
+  end
+
+  test "allows download after user is unbanned" do
+    @shared_file.user.ban!
+    @shared_file.user.unban!
+    get download_path(hash: @shared_file.download_hash)
+    assert_response :success
+  end
 end
