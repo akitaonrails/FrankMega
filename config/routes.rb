@@ -49,6 +49,9 @@ Rails.application.routes.draw do
     root to: "users#index"
   end
 
+  # Terms of Service
+  get "terms", to: "terms#show"
+
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 

@@ -134,4 +134,32 @@ class UserTest < ActiveSupport::TestCase
     create(:shared_file, user: user, file_size: 200)
     assert_equal 0, user.storage_remaining
   end
+
+  test "requires terms_accepted on create" do
+    user = build(:user, terms_accepted: "0")
+    assert_not user.valid?
+    assert user.errors[:terms_accepted].any?
+  end
+
+  test "valid with terms_accepted on create" do
+    user = build(:user, terms_accepted: "1")
+    assert user.valid?
+  end
+
+  test "sets terms_accepted_at when terms accepted" do
+    user = create(:user, terms_accepted: "1")
+    assert_not_nil user.terms_accepted_at
+  end
+
+  test "skips terms validation when skip_terms_validation is true" do
+    user = build(:user, terms_accepted: nil, skip_terms_validation: true)
+    assert user.valid?
+  end
+
+  test "does not require terms_accepted on update" do
+    user = create(:user)
+    user.terms_accepted = nil
+    user.email_address = "updated@example.com"
+    assert user.valid?
+  end
 end

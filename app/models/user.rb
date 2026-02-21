@@ -7,11 +7,16 @@ class User < ApplicationRecord
 
   encrypts :otp_secret
 
+  attr_accessor :terms_accepted, :skip_terms_validation
+
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 12 }, allow_nil: true
   validates :role, inclusion: { in: %w[admin user] }
+  validates :terms_accepted, acceptance: true, on: :create, unless: :skip_terms_validation
+
+  before_validation :set_terms_accepted_at, on: :create
 
   scope :admins, -> { where(role: "admin") }
   scope :active, -> { where(banned: false) }
@@ -89,5 +94,11 @@ class User < ApplicationRecord
   def can_upload?(file_size)
     grace = Rails.application.config.x.security.disk_quota_grace_bytes
     (storage_used + file_size) <= (disk_quota + grace)
+  end
+
+  private
+
+  def set_terms_accepted_at
+    self.terms_accepted_at = Time.current if terms_accepted.in?([ "1", true ])
   end
 end

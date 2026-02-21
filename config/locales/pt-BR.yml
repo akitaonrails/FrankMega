@@ -5,6 +5,7 @@ pt-BR:
     navbar:
       admin: "Admin"
       profile: "Perfil"
+      terms: "Termos de Serviço"
       log_out: "Sair"
     form_errors:
       heading:
@@ -61,6 +62,8 @@ pt-BR:
   registrations:
     new:
       heading: "Crie sua conta"
+      agree_to: "Eu concordo com os"
+      terms_of_service: "Termos de Serviço"
       submit: "Criar Conta"
       already_have_account: "Já tem uma conta?"
       sign_in: "Entrar"
@@ -131,6 +134,11 @@ pt-BR:
       back_to_home: "Voltar ao Início"
     shared_file:
       downloads: "downloads"
+
+  terms:
+    show:
+      heading: "Termos de Serviço"
+      last_updated: "Última atualização: %{date}"
 
   downloads:
     show:
@@ -302,6 +310,10 @@ pt-BR:
   activerecord:
     errors:
       models:
+        user:
+          attributes:
+            terms_accepted:
+              accepted: "deve ser aceito"
         shared_file:
           attributes:
             content_type:

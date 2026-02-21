@@ -27,12 +27,27 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email_address: "new@example.com",
           password: "password123!safe",
-          password_confirmation: "password123!safe"
+          password_confirmation: "password123!safe",
+          terms_accepted: "1"
         }
       }
     end
     assert_redirected_to root_path
     assert @invitation.reload.used?
+  end
+
+  test "does not create user without accepting terms" do
+    assert_no_difference "User.count" do
+      post register_path(code: @invitation.code), params: {
+        user: {
+          email_address: "new@example.com",
+          password: "password123!safe",
+          password_confirmation: "password123!safe",
+          terms_accepted: "0"
+        }
+      }
+    end
+    assert_response :unprocessable_entity
   end
 
   test "does not create user with used invitation" do

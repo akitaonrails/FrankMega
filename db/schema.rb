@@ -108,6 +108,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_21_200000) do
     t.string "otp_secret"
     t.string "password_digest", null: false
     t.string "role", default: "user", null: false
+    t.datetime "terms_accepted_at"
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end

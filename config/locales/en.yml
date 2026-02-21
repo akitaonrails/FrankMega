@@ -5,6 +5,7 @@ en:
     navbar:
       admin: "Admin"
       profile: "Profile"
+      terms: "Terms of Service"
       log_out: "Log out"
     form_errors:
       heading:
@@ -61,6 +62,8 @@ en:
   registrations:
     new:
       heading: "Create your account"
+      agree_to: "I agree to the"
+      terms_of_service: "Terms of Service"
       submit: "Create Account"
       already_have_account: "Already have an account?"
       sign_in: "Sign in"
@@ -131,6 +134,11 @@ en:
       back_to_home: "Back to Home"
     shared_file:
       downloads: "downloads"
+
+  terms:
+    show:
+      heading: "Terms of Service"
+      last_updated: "Last updated: %{date}"
 
   downloads:
     show:
@@ -302,6 +310,10 @@ en:
   activerecord:
     errors:
       models:
+        user:
+          attributes:
+            terms_accepted:
+              accepted: "must be accepted"
         shared_file:
           attributes:
             content_type:

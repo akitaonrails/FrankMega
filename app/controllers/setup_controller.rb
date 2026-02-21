@@ -10,6 +10,7 @@ class SetupController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.role = "admin"
+    @user.skip_terms_validation = true
 
     if @user.save
       start_new_session_for @user

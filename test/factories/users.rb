@@ -5,6 +5,7 @@ FactoryBot.define do
     password_confirmation { "password123!safe" }
     role { "user" }
     banned { false }
+    terms_accepted { "1" }
 
     trait :admin do
       role { "admin" }
