@@ -183,6 +183,7 @@ pt-BR:
         email: "E-mail"
         role: "Papel"
         status: "Status"
+        usage: "Uso"
         created: "Criado em"
         actions: "Ações"
       show:

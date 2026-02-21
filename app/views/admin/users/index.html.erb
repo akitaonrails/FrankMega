@@ -9,6 +9,7 @@
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.email") %></th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.role") %></th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.status") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.usage") %></th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.created") %></th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.actions") %></th>
         </tr>
@@ -28,6 +29,9 @@
               <% else %>
                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"><%= t("shared.status.active") %></span>
               <% end %>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+              <%= user.files_count %> <%= user.files_count == 1 ? "file" : "files" %> / <%= number_to_human_size(user.total_storage) %>
             </td>
             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><%= user.created_at.strftime("%Y-%m-%d") %></td>
             <td class="px-6 py-4 text-sm">

@@ -3,7 +3,11 @@ module Admin
     before_action :set_user, only: %i[show edit update destroy ban unban reset_password]
 
     def index
-      @users = User.order(created_at: :desc)
+      @users = User
+        .left_joins(:shared_files)
+        .select("users.*, COUNT(shared_files.id) AS files_count, COALESCE(SUM(shared_files.file_size), 0) AS total_storage")
+        .group("users.id")
+        .order(created_at: :desc)
     end
 
     def show

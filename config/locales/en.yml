@@ -183,6 +183,7 @@ en:
         email: "Email"
         role: "Role"
         status: "Status"
+        usage: "Usage"
         created: "Created"
         actions: "Actions"
       show:
