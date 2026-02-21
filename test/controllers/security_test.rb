@@ -59,23 +59,23 @@ class SecurityTest < ActionDispatch::IntegrationTest
 
   test "download returns 410 when file exhausted" do
     sf = create(:shared_file, max_downloads: 1, download_count: 1)
-    get download_file_path(hash: sf.download_hash)
+    post download_file_path(hash: sf.download_hash)
     assert_response :gone
   end
 
   test "download returns 410 for expired file" do
     sf = create(:shared_file, :expired)
-    get download_file_path(hash: sf.download_hash)
+    post download_file_path(hash: sf.download_hash)
     assert_response :gone
   end
 
   test "atomic download prevents over-counting" do
     sf = create(:shared_file, max_downloads: 1, download_count: 0)
 
-    get download_file_path(hash: sf.download_hash)
+    post download_file_path(hash: sf.download_hash)
     assert_response :success # file served directly
 
-    get download_file_path(hash: sf.download_hash)
+    post download_file_path(hash: sf.download_hash)
     assert_response :gone # second attempt fails
     assert_equal 1, sf.reload.download_count
   end

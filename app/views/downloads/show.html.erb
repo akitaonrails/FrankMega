@@ -24,9 +24,9 @@
         </dl>
       </div>
 
-      <%= link_to t("downloads.show.download"), download_file_path(hash: @shared_file.download_hash),
-          class: "block w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer text-lg text-center",
-          data: { turbo: false } %>
+      <%= button_to t("downloads.show.download"), download_file_path(hash: @shared_file.download_hash),
+          class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer text-lg text-center",
+          form: { data: { turbo: false } } %>
 
       <p class="mt-4 text-xs text-gray-400 dark:text-gray-500"><%= t("downloads.show.expiry_note") %></p>
     </div>

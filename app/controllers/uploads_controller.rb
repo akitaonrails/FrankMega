@@ -13,8 +13,8 @@ class UploadsController < ApplicationController
     if params[:file].present?
       uploaded = params[:file]
       @shared_file.file.attach(uploaded)
-      @shared_file.original_filename = sanitize_filename(uploaded.original_filename)
       @shared_file.content_type = Marcel::MimeType.for(uploaded.tempfile, name: uploaded.original_filename)
+      @shared_file.original_filename = sanitize_filename(uploaded.original_filename, @shared_file.content_type)
       @shared_file.file_size = uploaded.tempfile.size
     end
 
@@ -51,7 +51,15 @@ class UploadsController < ApplicationController
     "#{request.base_url}/d/#{shared_file.download_hash}"
   end
 
-  def sanitize_filename(name)
+  KNOWN_EXTENSIONS = %w[
+    jpg jpeg png gif webp bmp tiff tif svg ico
+    pdf doc docx xls xlsx ppt pptx odt ods odp rtf
+    zip gz bz2 xz tar rar 7z
+    mp3 mp4 m4a m4v avi mov mkv wmv flv webm wav flac ogg aac
+    txt csv json xml yaml yml html htm css js rb py sh md
+  ].freeze
+
+  def sanitize_filename(name, content_type = nil)
     sanitized = File.basename(name.to_s)
     sanitized = sanitized.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
     sanitized = sanitized.gsub(/[\x00-\x1f\x7f\/\\:*?"<>|]/, "")
@@ -63,8 +71,29 @@ class UploadsController < ApplicationController
       sanitized = "_#{sanitized}"
     end
 
+    sanitized = strip_extension_junk(sanitized, content_type)
     sanitized = truncate_filename(sanitized, 255)
     sanitized.presence || "unnamed_file"
+  end
+
+  def strip_extension_junk(name, content_type)
+    ext_pattern = KNOWN_EXTENSIONS.join("|")
+
+    # Detect a known extension followed by _, comma, or + (URL artifact junk)
+    match = name.match(/\A(.+?)\.(#{ext_pattern})[_,+]/i)
+    return name unless match
+
+    clean_name = "#{match[1]}.#{match[2]}"
+
+    # Replace with correct extension if content_type is known and differs
+    if content_type
+      correct_ext = MiniMime.lookup_by_content_type(content_type)&.extension
+      if correct_ext && !clean_name.downcase.end_with?(".#{correct_ext.downcase}")
+        clean_name = "#{match[1]}.#{correct_ext}"
+      end
+    end
+
+    clean_name
   end
 
   def truncate_filename(name, max_bytes)

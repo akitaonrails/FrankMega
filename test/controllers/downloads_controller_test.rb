@@ -30,18 +30,18 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
 
   test "download increments counter" do
     assert_difference -> { @shared_file.reload.download_count }, 1 do
-      get download_file_path(hash: @shared_file.download_hash)
+      post download_file_path(hash: @shared_file.download_hash)
     end
   end
 
   test "download returns 404 for invalid hash" do
-    get download_file_path(hash: "nonexistent_hash")
+    post download_file_path(hash: "nonexistent_hash")
     assert_response :not_found
   end
 
   test "download returns 410 for expired file" do
     expired = create(:shared_file, :expired)
-    get download_file_path(hash: expired.download_hash)
+    post download_file_path(hash: expired.download_hash)
     assert_response :gone
   end
 
@@ -53,7 +53,7 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
 
   test "returns 410 for banned user's file on download" do
     @shared_file.user.ban!
-    get download_file_path(hash: @shared_file.download_hash)
+    post download_file_path(hash: @shared_file.download_hash)
     assert_response :gone
   end
 

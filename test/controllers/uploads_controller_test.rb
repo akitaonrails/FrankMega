@@ -154,4 +154,35 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
     shared_file = SharedFile.last
     assert_equal "hidden", shared_file.original_filename
   end
+
+  test "strips URL junk after embedded file extension" do
+    file = fixture_file_upload("test.txt", "text/plain")
+    file.define_singleton_method(:original_filename) { "image.png_0,0,2140,2000+stuff.jpeg" }
+
+    assert_difference "SharedFile.count", 1 do
+      post uploads_path, params: {
+        file: file,
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
+    shared_file = SharedFile.last
+    assert_not_includes shared_file.original_filename, "_0,0,2140"
+    assert shared_file.original_filename.end_with?(".txt") || shared_file.original_filename.end_with?(".png") || shared_file.original_filename.end_with?(".jpeg")
+  end
+
+  test "preserves normal filenames with multiple dots" do
+    file = fixture_file_upload("test.txt", "text/plain")
+    file.define_singleton_method(:original_filename) { "report.final.2024.txt" }
+
+    assert_difference "SharedFile.count", 1 do
+      post uploads_path, params: {
+        file: file,
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
+    shared_file = SharedFile.last
+    assert_equal "report.final.2024.txt", shared_file.original_filename
+  end
 end
