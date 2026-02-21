@@ -73,7 +73,7 @@ class SecurityTest < ActionDispatch::IntegrationTest
     sf = create(:shared_file, max_downloads: 1, download_count: 0)
 
     post download_file_path(hash: sf.download_hash)
-    assert_response :redirect # successful download
+    assert_response :success # file served directly
 
     post download_file_path(hash: sf.download_hash)
     assert_response :gone # second attempt fails

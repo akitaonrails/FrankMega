@@ -22,7 +22,10 @@ class DownloadsController < ApplicationController
     else
       @shared_file.reload
       DownloadNotificationJob.perform_later(@shared_file.id)
-      redirect_to rails_blob_path(@shared_file.file, disposition: "attachment")
+      send_file ActiveStorage::Blob.service.path_for(@shared_file.file.key),
+                filename: @shared_file.original_filename,
+                type: @shared_file.content_type,
+                disposition: "attachment"
     end
   end
 

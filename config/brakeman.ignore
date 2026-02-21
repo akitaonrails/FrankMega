@@ -3,6 +3,10 @@
     {
       "fingerprint": "5e27ea82d9cb6b6bbae8efc7d37b18c30d5b2b4a69e935eecfb461a1c6919e84",
       "note": "Intentional: only admin users can access this controller and change roles/quotas"
+    },
+    {
+      "fingerprint": "62abb8f23d642def345fc4e903c5bc07b4a26341b44f8404f6293bd20e3ac5f7",
+      "note": "File key comes from ActiveStorage blob, not user input — path resolves within storage directory only"
     }
   ],
   "updated": "2026-02-21",
