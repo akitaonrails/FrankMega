@@ -3,7 +3,7 @@ services:
     image: akitaonrails/frankmega:latest
     build: .
     ports:
-      - "3000:80"
+      - "3100:80"
     volumes:
       - uploads:/rails/storage/uploads
       - db_data:/rails/storage

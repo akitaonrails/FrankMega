@@ -75,7 +75,7 @@ docker compose up -d
 
 The pre-built image is available at [`akitaonrails/frankmega`](https://hub.docker.com/r/akitaonrails/frankmega) on Docker Hub.
 
-The app listens on port **3000** (mapped from container port 80 via Thruster). On first visit, you'll be prompted to create the admin account.
+The app listens on port **3100** (mapped from container port 80 via Thruster). On first visit, you'll be prompted to create the admin account.
 
 Data is persisted in two Docker volumes: `uploads` (files) and `db_data` (SQLite databases).
 
@@ -85,7 +85,7 @@ Data is persisted in two Docker volumes: `uploads` (files) and `db_data` (SQLite
 2. Add a public hostname rule:
    - **Subdomain:** `frankmega` (or your choice)
    - **Domain:** `yourdomain.com`
-   - **Service:** `http://localhost:3000`
+   - **Service:** `http://localhost:3100`
 3. Under **SSL/TLS** settings for the domain, set encryption mode to **Full**
 4. Set `FORCE_SSL=true` in your `.env` — this enables `assume_ssl` and `force_ssl` so Rails trusts the `X-Forwarded-Proto` header from Cloudflare
 
