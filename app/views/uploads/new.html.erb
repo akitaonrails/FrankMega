@@ -31,7 +31,14 @@
     <%= render "shared/form_errors", resource: @shared_file %>
 
     <%= form_with model: @shared_file, url: uploads_path, multipart: true, class: "space-y-6",
-        data: { controller: "upload" } do |f| %>
+        data: {
+          controller: "upload",
+          upload_max_file_size_value: 1.gigabyte,
+          upload_storage_remaining_value: current_user.storage_remaining,
+          upload_error_too_large_value: t("uploads.new.error_too_large"),
+          upload_error_quota_exceeded_value: t("uploads.new.error_quota_exceeded"),
+          upload_error_invalid_filename_value: t("uploads.new.error_invalid_filename")
+        } do |f| %>
 
       <%# Drag and drop zone %>
       <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center transition-colors"
@@ -45,6 +52,9 @@
             class: "mt-2 block mx-auto text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover file:cursor-pointer",
             data: { upload_target: "input", action: "change->upload#fileSelected" } %>
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t("uploads.new.max_file_size") %></p>
+
+        <%# Client-side validation error %>
+        <div data-upload-target="error" class="hidden mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300 font-medium"></div>
 
         <%# File preview %>
         <div data-upload-target="preview" class="hidden mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-left">
@@ -74,7 +84,8 @@
         </div>
       </div>
 
-      <%= f.submit t("uploads.new.submit"), class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+      <%= f.submit t("uploads.new.submit"), class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer",
+          data: { upload_target: "submit" } %>
     <% end %>
   </div>
 

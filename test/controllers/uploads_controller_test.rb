@@ -76,4 +76,82 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :redirect
   end
+
+  test "sanitizes path traversal in filename" do
+    file = fixture_file_upload("test.txt", "text/plain")
+    # Stub original_filename to simulate path traversal
+    file.define_singleton_method(:original_filename) { "../../etc/passwd" }
+
+    assert_difference "SharedFile.count", 1 do
+      post uploads_path, params: {
+        file: file,
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
+    shared_file = SharedFile.last
+    assert_equal "passwd", shared_file.original_filename
+  end
+
+  test "sanitizes control characters in filename" do
+    file = fixture_file_upload("test.txt", "text/plain")
+    file.define_singleton_method(:original_filename) { "file\x01\x02name.txt" }
+
+    assert_difference "SharedFile.count", 1 do
+      post uploads_path, params: {
+        file: file,
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
+    shared_file = SharedFile.last
+    assert_equal "filename.txt", shared_file.original_filename
+  end
+
+  test "truncates long filename preserving extension" do
+    file = fixture_file_upload("test.txt", "text/plain")
+    long_name = "#{"a" * 300}.txt"
+    file.define_singleton_method(:original_filename) { long_name }
+
+    assert_difference "SharedFile.count", 1 do
+      post uploads_path, params: {
+        file: file,
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
+    shared_file = SharedFile.last
+    assert shared_file.original_filename.bytesize <= 255
+    assert shared_file.original_filename.end_with?(".txt")
+  end
+
+  test "sanitizes Windows reserved names" do
+    file = fixture_file_upload("test.txt", "text/plain")
+    file.define_singleton_method(:original_filename) { "CON.txt" }
+
+    assert_difference "SharedFile.count", 1 do
+      post uploads_path, params: {
+        file: file,
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
+    shared_file = SharedFile.last
+    assert_equal "_CON.txt", shared_file.original_filename
+  end
+
+  test "sanitizes hidden filenames" do
+    file = fixture_file_upload("test.txt", "text/plain")
+    file.define_singleton_method(:original_filename) { ".hidden" }
+
+    assert_difference "SharedFile.count", 1 do
+      post uploads_path, params: {
+        file: file,
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
+    shared_file = SharedFile.last
+    assert_equal "hidden", shared_file.original_filename
+  end
 end

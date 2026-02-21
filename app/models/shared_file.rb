@@ -10,7 +10,7 @@ class SharedFile < ApplicationRecord
   validates :download_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :ttl_hours, presence: true, numericality: { in: 1..24 }
   validates :expires_at, presence: true
-  validates :original_filename, presence: true
+  validates :original_filename, presence: true, length: { maximum: 255 }
   validates :content_type, presence: true
   validates :file_size, presence: true, numericality: { less_than_or_equal_to: 1.gigabyte }
   validate :file_type_allowed, on: :create

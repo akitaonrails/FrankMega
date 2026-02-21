@@ -127,6 +127,9 @@ pt-BR:
       submit: "Enviar e Compartilhar"
       active_files: "Arquivos Ativos"
       expired_exhausted: "Expirados / Esgotados"
+      error_too_large: "O arquivo excede o tamanho máximo de 1 GB."
+      error_quota_exceeded: "O arquivo excede sua cota de armazenamento restante."
+      error_invalid_filename: "O nome do arquivo contém caracteres inválidos ou é muito longo."
     show:
       heading: "Arquivo Enviado!"
       filename: "Nome do Arquivo"

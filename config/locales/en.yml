@@ -127,6 +127,9 @@ en:
       submit: "Upload & Share"
       active_files: "Active Files"
       expired_exhausted: "Expired / Exhausted"
+      error_too_large: "File exceeds the maximum size of 1 GB."
+      error_quota_exceeded: "File exceeds your remaining storage quota."
+      error_invalid_filename: "Filename contains invalid characters or is too long."
     show:
       heading: "File Uploaded!"
       filename: "Filename"

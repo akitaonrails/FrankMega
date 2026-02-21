@@ -107,4 +107,10 @@ class SharedFileTest < ActiveSupport::TestCase
     file = build(:shared_file, user: user, file_size: 500.megabytes)
     assert file.valid?
   end
+
+  test "rejects filename longer than 255 characters" do
+    file = build(:shared_file, original_filename: "#{"a" * 256}.txt")
+    assert_not file.valid?
+    assert file.errors[:original_filename].any?
+  end
 end

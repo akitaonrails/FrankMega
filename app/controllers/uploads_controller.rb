@@ -52,10 +52,30 @@ class UploadsController < ApplicationController
   end
 
   def sanitize_filename(name)
-    basename = File.basename(name.to_s)
-    sanitized = basename.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
-                        .gsub(/[\x00\/\\]/, "")
-                        .strip
+    sanitized = File.basename(name.to_s)
+    sanitized = sanitized.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
+    sanitized = sanitized.gsub(/[\x00-\x1f\x7f\/\\:*?"<>|]/, "")
+    sanitized = sanitized.sub(/\A\.+/, "")
+    sanitized = sanitized.gsub(/\s+/, " ").strip
+
+    base_without_ext = sanitized.sub(/\.[^.]*\z/, "")
+    if base_without_ext.match?(/\A(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])\z/i)
+      sanitized = "_#{sanitized}"
+    end
+
+    sanitized = truncate_filename(sanitized, 255)
     sanitized.presence || "unnamed_file"
+  end
+
+  def truncate_filename(name, max_bytes)
+    return name if name.bytesize <= max_bytes
+
+    ext = File.extname(name)
+    base = File.basename(name, ext)
+    max_base = max_bytes - ext.bytesize
+    return ext.byteslice(0, max_bytes) if max_base <= 0
+
+    base = base.chop while base.bytesize > max_base
+    "#{base}#{ext}"
   end
 end
