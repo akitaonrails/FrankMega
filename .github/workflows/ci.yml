@@ -24,6 +24,22 @@ jobs:
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
       
+  outdated:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Check for outdated dependencies
+        continue-on-error: true
+        run: bundle outdated --only-explicit
+
   scan_js:
     runs-on: ubuntu-latest
 
