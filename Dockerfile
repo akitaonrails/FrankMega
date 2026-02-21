@@ -51,8 +51,16 @@ COPY . .
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY.
+# Dummy values satisfy ENV.fetch calls in production config during asset compilation.
+RUN SECRET_KEY_BASE_DUMMY=1 \
+    HOST=build.invalid \
+    WEBAUTHN_ORIGIN=https://build.invalid \
+    WEBAUTHN_RP_ID=build.invalid \
+    ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=build-dummy-primary-key-placeholder \
+    ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=build-dummy-deterministic-key-ph \
+    ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=build-dummy-derivation-salt-ph \
+    ./bin/rails assets:precompile
 
 
 
