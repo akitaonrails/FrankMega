@@ -9,7 +9,7 @@
 
         <div class="flex items-center gap-4">
           <% if current_user&.admin? %>
-            <%= link_to "Admin", admin_root_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" %>
+            <%= link_to t("shared.navbar.admin"), admin_root_path, class: "text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" %>
           <% end %>
         </div>
       </div>
@@ -37,8 +37,8 @@
             </svg>
           </button>
           <div data-dropdown-target="menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-dark-surface rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
-            <%= link_to "Profile", profile_path, class: "block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" %>
-            <%= button_to "Log out", session_path, method: :delete, form: { class: "w-full" }, class: "w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer" %>
+            <%= link_to t("shared.navbar.profile"), profile_path, class: "block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" %>
+            <%= button_to t("shared.navbar.log_out"), session_path, method: :delete, form: { class: "w-full" }, class: "w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer" %>
           </div>
         </div>
       </div>

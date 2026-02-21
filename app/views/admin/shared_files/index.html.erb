@@ -1,6 +1,6 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
   <%= render "admin/shared/nav" %>
-  <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">All Shared Files</h1>
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6"><%= t("admin.shared_files.index.heading") %></h1>
 
   <% if flash[:notice] %>
     <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-4 text-sm text-green-700 dark:text-green-300">
@@ -12,11 +12,11 @@
     <table class="w-full">
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">File</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Downloads</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.shared_files.index.file") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.shared_files.index.user") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.shared_files.index.downloads") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.shared_files.index.status") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.shared_files.index.actions") %></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -27,14 +27,14 @@
             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><%= sf.download_count %>/<%= sf.max_downloads %></td>
             <td class="px-6 py-4 text-sm">
               <% if sf.active? %>
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Active</span>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"><%= t("shared.status.active") %></span>
               <% else %>
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Inactive</span>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"><%= t("shared.status.inactive") %></span>
               <% end %>
             </td>
             <td class="px-6 py-4 text-sm">
-              <%= button_to "Delete", admin_shared_file_path(sf), method: :delete, class: "text-red-600 hover:text-red-800 dark:text-red-400",
-                  data: { turbo_confirm: "Delete this file?" } %>
+              <%= button_to t("shared.actions.delete"), admin_shared_file_path(sf), method: :delete, class: "text-red-600 hover:text-red-800 dark:text-red-400",
+                  data: { turbo_confirm: t("shared.confirm.delete_file") } %>
             </td>
           </tr>
         <% end %>

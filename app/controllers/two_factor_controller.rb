@@ -9,10 +9,10 @@ class TwoFactorController < ApplicationController
   def create
     if @user.verify_otp(params[:otp_code])
       @user.enable_otp!
-      redirect_to profile_path, notice: "Two-factor authentication enabled."
+      redirect_to profile_path, notice: t("flash.two_factor.create.notice")
     else
       @qr_code = generate_qr_code(@user.otp_provisioning_uri)
-      flash.now[:alert] = "Invalid code. Please try again."
+      flash.now[:alert] = t("flash.two_factor.create.alert")
       render :new, status: :unprocessable_entity
     end
   end
@@ -20,9 +20,9 @@ class TwoFactorController < ApplicationController
   def destroy
     if @user.verify_otp(params[:otp_code])
       @user.disable_otp!
-      redirect_to profile_path, notice: "Two-factor authentication disabled."
+      redirect_to profile_path, notice: t("flash.two_factor.destroy.notice")
     else
-      redirect_to profile_path, alert: "Invalid code. 2FA not disabled."
+      redirect_to profile_path, alert: t("flash.two_factor.destroy.alert")
     end
   end
 

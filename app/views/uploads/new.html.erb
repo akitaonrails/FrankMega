@@ -2,23 +2,23 @@
 
 <div class="max-w-2xl mx-auto py-8">
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Upload File</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6"><%= t("uploads.new.heading") %></h1>
 
     <%# Quota usage bar %>
     <% usage_pct = @disk_quota.positive? ? ((@storage_used.to_f / @disk_quota) * 100).clamp(0, 100) : 0 %>
     <% bar_color = usage_pct > 90 ? "bg-danger" : (usage_pct > 70 ? "bg-warning" : "bg-success") %>
     <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
       <div class="flex justify-between items-center mb-2">
-        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Storage</span>
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300"><%= t("shared.storage.label") %></span>
         <span class="text-sm text-gray-500 dark:text-gray-400">
-          <%= number_to_human_size(@storage_used) %> / <%= number_to_human_size(@disk_quota) %> used
+          <%= t("shared.storage.used", used: number_to_human_size(@storage_used), total: number_to_human_size(@disk_quota)) %>
         </span>
       </div>
       <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
         <div class="<%= bar_color %> h-2.5 rounded-full transition-all duration-300" style="width: <%= usage_pct %>%"></div>
       </div>
       <% if usage_pct > 90 %>
-        <p class="mt-2 text-xs text-danger font-medium">Storage almost full. Delete files to free up space.</p>
+        <p class="mt-2 text-xs text-danger font-medium"><%= t("shared.storage.almost_full") %></p>
       <% end %>
     </div>
 
@@ -40,11 +40,11 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">Drag and drop your file here, or</p>
+        <p class="mt-2 text-gray-600 dark:text-gray-400"><%= t("uploads.new.drag_drop") %></p>
         <%= file_field_tag :file, accept: AllowedMimeType.enabled_types.join(","),
             class: "mt-2 block mx-auto text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover file:cursor-pointer",
             data: { upload_target: "input", action: "change->upload#fileSelected" } %>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Max file size: 1 GB</p>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t("uploads.new.max_file_size") %></p>
 
         <%# File preview %>
         <div data-upload-target="preview" class="hidden mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-left">
@@ -63,18 +63,18 @@
 
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <%= f.label :max_downloads, "Max Downloads", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.label :max_downloads, t("uploads.new.max_downloads"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
           <%= f.number_field :max_downloads, min: 1, max: 10, value: 5,
               class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
         </div>
         <div>
-          <%= f.label :ttl_hours, "Expires After (hours)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.label :ttl_hours, t("uploads.new.ttl_hours"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
           <%= f.number_field :ttl_hours, min: 1, max: 24, value: 24,
               class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
         </div>
       </div>
 
-      <%= f.submit "Upload & Share", class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+      <%= f.submit t("uploads.new.submit"), class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
     <% end %>
   </div>
 
@@ -82,7 +82,7 @@
   <div id="toast_notifications" class="fixed top-20 right-4 z-50 space-y-2"></div>
 
   <% if @active_files.any? %>
-    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-3">Active Files</h2>
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-3"><%= t("uploads.new.active_files") %></h2>
     <div class="space-y-3">
       <% @active_files.each do |shared_file| %>
         <%= render "uploads/shared_file", shared_file: shared_file %>
@@ -91,7 +91,7 @@
   <% end %>
 
   <% if @inactive_files.any? %>
-    <h2 class="text-lg font-semibold text-gray-500 dark:text-gray-400 mt-8 mb-3">Expired / Exhausted</h2>
+    <h2 class="text-lg font-semibold text-gray-500 dark:text-gray-400 mt-8 mb-3"><%= t("uploads.new.expired_exhausted") %></h2>
     <div class="space-y-3 opacity-60">
       <% @inactive_files.each do |shared_file| %>
         <%= render "uploads/shared_file", shared_file: shared_file %>

@@ -1,8 +1,8 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
   <%= render "admin/shared/nav" %>
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Allowed MIME Types</h1>
-    <%= link_to "Add Type", new_admin_allowed_mime_type_path, class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors" %>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= t("admin.allowed_mime_types.index.heading") %></h1>
+    <%= link_to t("admin.allowed_mime_types.index.add_type"), new_admin_allowed_mime_type_path, class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors" %>
   </div>
 
   <% if flash[:notice] %>
@@ -15,10 +15,10 @@
     <table class="w-full">
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">MIME Type</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.allowed_mime_types.index.mime_type") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.allowed_mime_types.index.description") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.allowed_mime_types.index.status") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.allowed_mime_types.index.actions") %></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -28,12 +28,12 @@
             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><%= mt.description %></td>
             <td class="px-6 py-4 text-sm">
               <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= mt.enabled? ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' %>">
-                <%= mt.enabled? ? "Enabled" : "Disabled" %>
+                <%= mt.enabled? ? t("shared.status.enabled") : t("shared.status.disabled") %>
               </span>
             </td>
             <td class="px-6 py-4 text-sm">
-              <%= button_to "Remove", admin_allowed_mime_type_path(mt), method: :delete, class: "text-red-600 hover:text-red-800 dark:text-red-400",
-                  data: { turbo_confirm: "Remove this MIME type?" } %>
+              <%= button_to t("shared.actions.remove"), admin_allowed_mime_type_path(mt), method: :delete, class: "text-red-600 hover:text-red-800 dark:text-red-400",
+                  data: { turbo_confirm: t("shared.confirm.remove_mime_type") } %>
             </td>
           </tr>
         <% end %>

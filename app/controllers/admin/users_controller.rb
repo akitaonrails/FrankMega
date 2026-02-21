@@ -16,12 +16,12 @@ module Admin
 
     def update
       if removing_last_admin?
-        redirect_to admin_user_path(@user), alert: "Cannot remove admin role from the last admin."
+        redirect_to admin_user_path(@user), alert: t("flash.admin.users.update.last_admin_role")
         return
       end
 
       if @user.update(user_params)
-        redirect_to admin_user_path(@user), notice: "User updated."
+        redirect_to admin_user_path(@user), notice: t("flash.admin.users.update.notice")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -29,27 +29,27 @@ module Admin
 
     def destroy
       if @user.sole_admin?
-        redirect_to admin_user_path(@user), alert: "Cannot delete the last admin."
+        redirect_to admin_user_path(@user), alert: t("flash.admin.users.destroy.last_admin")
         return
       end
 
       @user.destroy
-      redirect_to admin_users_path, notice: "User deleted."
+      redirect_to admin_users_path, notice: t("flash.admin.users.destroy.notice")
     end
 
     def ban
       if @user.sole_admin?
-        redirect_to admin_user_path(@user), alert: "Cannot ban the last admin."
+        redirect_to admin_user_path(@user), alert: t("flash.admin.users.ban.last_admin")
         return
       end
 
       @user.ban!
-      redirect_to admin_user_path(@user), notice: "User banned."
+      redirect_to admin_user_path(@user), notice: t("flash.admin.users.ban.notice")
     end
 
     def unban
       @user.unban!
-      redirect_to admin_user_path(@user), notice: "User unbanned."
+      redirect_to admin_user_path(@user), notice: t("flash.admin.users.unban.notice")
     end
 
     def reset_password

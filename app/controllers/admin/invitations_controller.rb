@@ -15,7 +15,7 @@ module Admin
       )
 
       if @invitation.save
-        redirect_to admin_invitations_path, notice: "Invitation created: #{register_url(code: @invitation.code)}"
+        redirect_to admin_invitations_path, notice: t("flash.admin.invitations.create.notice", url: register_url(code: @invitation.code))
       else
         render :new, status: :unprocessable_entity
       end
@@ -24,7 +24,7 @@ module Admin
     def destroy
       invitation = Invitation.find(params[:id])
       invitation.destroy
-      redirect_to admin_invitations_path, notice: "Invitation revoked."
+      redirect_to admin_invitations_path, notice: t("flash.admin.invitations.destroy.notice")
     end
   end
 end

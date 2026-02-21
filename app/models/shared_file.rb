@@ -70,19 +70,19 @@ class SharedFile < ApplicationRecord
     allowed = AllowedMimeType.enabled_types
     return if allowed.empty?
     unless allowed.include?(content_type)
-      errors.add(:content_type, "#{content_type} is not an allowed file type")
+      errors.add(:content_type, I18n.t("activerecord.errors.models.shared_file.attributes.content_type.file_type_not_allowed", type: content_type))
     end
   end
 
   def file_attached
-    errors.add(:file, "must be attached") unless file.attached?
+    errors.add(:file, I18n.t("activerecord.errors.models.shared_file.attributes.file.file_must_be_attached")) unless file.attached?
   end
 
   def within_user_quota
     return unless user && file_size.present?
     unless user.can_upload?(file_size)
       quota_display = ActionController::Base.helpers.number_to_human_size(user.disk_quota)
-      errors.add(:base, "Upload would exceed your storage quota (#{quota_display} limit)")
+      errors.add(:base, I18n.t("activerecord.errors.models.shared_file.attributes.base.quota_exceeded", quota: quota_display))
     end
   end
 end

@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="ml-3">
         <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
-          <%= pluralize(resource.errors.count, "error") %> prohibited this from being saved:
+          <%= t("shared.form_errors.heading", count: resource.errors.count) %>
         </h3>
         <ul class="mt-2 text-sm text-red-700 dark:text-red-400 list-disc list-inside">
           <% resource.errors.full_messages.each do |message| %>

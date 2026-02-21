@@ -32,6 +32,11 @@ module FrankMega
       config.active_record.encryption.key_derivation_salt = ENV.fetch("ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT", "dev-only-derivation-salt-32char!")
     end
 
+    # I18n
+    config.i18n.available_locales = [ :en, :"pt-BR" ]
+    config.i18n.default_locale = :en
+    config.i18n.fallbacks = true
+
     # Generators
     config.generators do |g|
       g.test_framework :minitest, fixture: false

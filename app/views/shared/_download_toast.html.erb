@@ -8,7 +8,7 @@
       </svg>
     </div>
     <div class="flex-1 min-w-0">
-      <p class="text-sm font-medium text-gray-900 dark:text-white">File downloaded</p>
+      <p class="text-sm font-medium text-gray-900 dark:text-white"><%= t("shared.download_toast.file_downloaded") %></p>
       <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
         <%= shared_file.original_filename %>
         (<%= shared_file.download_count %>/<%= shared_file.max_downloads %>)

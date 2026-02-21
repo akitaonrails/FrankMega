@@ -1,8 +1,8 @@
 <div class="min-h-screen flex items-center justify-center">
   <div class="w-full max-w-md">
     <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
-      <h1 class="text-3xl font-bold text-center text-primary mb-2">FrankMega</h1>
-      <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Create your account</p>
+      <h1 class="text-3xl font-bold text-center text-primary mb-2"><%= t("app_name") %></h1>
+      <p class="text-center text-gray-600 dark:text-gray-400 mb-8"><%= t("registrations.new.heading") %></p>
 
       <%= render "shared/form_errors", resource: @user %>
 
@@ -25,12 +25,12 @@
               class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
         </div>
 
-        <%= f.submit "Create Account", class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+        <%= f.submit t("registrations.new.submit"), class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
       <% end %>
 
       <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-        Already have an account?
-        <%= link_to "Sign in", new_session_path, class: "text-primary hover:underline" %>
+        <%= t("registrations.new.already_have_account") %>
+        <%= link_to t("registrations.new.sign_in"), new_session_path, class: "text-primary hover:underline" %>
       </p>
     </div>
   </div>

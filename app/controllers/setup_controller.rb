@@ -13,7 +13,7 @@ class SetupController < ApplicationController
 
     if @user.save
       start_new_session_for @user
-      redirect_to root_path, notice: "Admin account created. Welcome to FrankMega!"
+      redirect_to root_path, notice: t("flash.setup.create.notice")
     else
       render :new, status: :unprocessable_entity
     end

@@ -9,7 +9,7 @@ class ProfilesController < ApplicationController
     @user = current_user
 
     if @user.update(profile_params)
-      redirect_to profile_path, notice: "Profile updated."
+      redirect_to profile_path, notice: t("flash.profiles.update.notice")
     else
       @webauthn_credentials = @user.webauthn_credentials
       @sessions = @user.sessions.order(created_at: :desc)

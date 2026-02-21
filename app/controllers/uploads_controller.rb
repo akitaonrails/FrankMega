@@ -38,7 +38,7 @@ class UploadsController < ApplicationController
     @shared_file = current_user.shared_files.find(params[:id])
     @shared_file.file.purge
     @shared_file.destroy
-    redirect_to new_upload_path, notice: "File deleted."
+    redirect_to new_upload_path, notice: t("flash.uploads.destroy.notice")
   end
 
   private

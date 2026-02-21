@@ -1,10 +1,10 @@
 <nav class="mb-6 flex items-center gap-1 border-b border-gray-200 dark:border-gray-700">
   <%
     tabs = [
-      ["Users", admin_users_path],
-      ["Invitations", admin_invitations_path],
-      ["Files", admin_shared_files_path],
-      ["MIME Types", admin_allowed_mime_types_path]
+      [t("admin.nav.users"), admin_users_path],
+      [t("admin.nav.invitations"), admin_invitations_path],
+      [t("admin.nav.files"), admin_shared_files_path],
+      [t("admin.nav.mime_types"), admin_allowed_mime_types_path]
     ]
   %>
   <% tabs.each do |label, path| %>

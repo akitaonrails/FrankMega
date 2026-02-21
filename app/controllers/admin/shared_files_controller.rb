@@ -12,7 +12,7 @@ module Admin
       shared_file = SharedFile.find(params[:id])
       shared_file.file.purge if shared_file.file.attached?
       shared_file.destroy
-      redirect_to admin_shared_files_path, notice: "File deleted."
+      redirect_to admin_shared_files_path, notice: t("flash.admin.shared_files.destroy.notice")
     end
   end
 end

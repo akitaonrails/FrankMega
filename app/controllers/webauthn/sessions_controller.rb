@@ -34,7 +34,7 @@ module Webauthn
       user = stored_credential.user
 
       if user.banned?
-        render json: { error: "Account suspended." }, status: :forbidden
+        render json: { error: t("flash.webauthn.sessions.create.account_suspended") }, status: :forbidden
         return
       end
 

@@ -17,6 +17,8 @@ services:
       - ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=${ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY}
       - ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=${ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY}
       - ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=${ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT}
+      # Locale: set to pt-BR for Portuguese (default: en)
+      - APP_LOCALE=${APP_LOCALE:-en}
       # SSL: defaults to true in production — set to false for local Docker testing without TLS
       - FORCE_SSL=${FORCE_SSL:-true}
       # Storage

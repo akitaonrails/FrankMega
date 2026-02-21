@@ -1,7 +1,7 @@
 <div class="min-h-screen flex items-center justify-center">
   <div class="w-full max-w-md">
     <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8 text-center">
-      <h1 class="text-3xl font-bold text-primary mb-2">FrankMega</h1>
+      <h1 class="text-3xl font-bold text-primary mb-2"><%= t("app_name") %></h1>
 
       <div class="my-8">
         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -14,20 +14,20 @@
       <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6 text-sm">
         <dl class="space-y-2">
           <div class="flex justify-between">
-            <dt class="text-gray-500 dark:text-gray-400">Size</dt>
+            <dt class="text-gray-500 dark:text-gray-400"><%= t("downloads.show.size") %></dt>
             <dd class="font-medium text-gray-900 dark:text-white"><%= number_to_human_size(@shared_file.file_size) %></dd>
           </div>
           <div class="flex justify-between">
-            <dt class="text-gray-500 dark:text-gray-400">Downloads remaining</dt>
+            <dt class="text-gray-500 dark:text-gray-400"><%= t("downloads.show.downloads_remaining") %></dt>
             <dd class="font-medium text-gray-900 dark:text-white"><%= @shared_file.downloads_remaining %></dd>
           </div>
         </dl>
       </div>
 
-      <%= button_to "Download", download_file_path(hash: @shared_file.download_hash),
+      <%= button_to t("downloads.show.download"), download_file_path(hash: @shared_file.download_hash),
           class: "w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer text-lg" %>
 
-      <p class="mt-4 text-xs text-gray-400 dark:text-gray-500">This link will expire automatically.</p>
+      <p class="mt-4 text-xs text-gray-400 dark:text-gray-500"><%= t("downloads.show.expiry_note") %></p>
     </div>
   </div>
 </div>

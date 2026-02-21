@@ -1,0 +1,327 @@
+pt-BR:
+  app_name: "FrankMega"
+
+  shared:
+    navbar:
+      admin: "Admin"
+      profile: "Perfil"
+      log_out: "Sair"
+    form_errors:
+      heading:
+        one: "1 erro impediu o salvamento:"
+        other: "%{count} erros impediram o salvamento:"
+    download_toast:
+      file_downloaded: "Arquivo baixado"
+    status:
+      active: "Ativo"
+      inactive: "Inativo"
+      expired: "Expirado"
+      exhausted: "Esgotado"
+      enabled: "Ativado"
+      disabled: "Desativado"
+      banned: "Banido"
+      pending: "pendente"
+      used: "usado"
+    actions:
+      edit: "Editar"
+      delete: "Excluir"
+      cancel: "Cancelar"
+      update: "Atualizar"
+      back: "Voltar"
+      create: "Criar"
+      remove: "Remover"
+      view: "Ver"
+      copy: "Copiar"
+      download: "Baixar"
+    confirm:
+      delete_file: "Excluir este arquivo?"
+      revoke_invitation: "Revogar este convite?"
+      remove_passkey: "Remover esta passkey?"
+      disable_2fa: "Tem certeza que deseja desativar o 2FA?"
+      ban_user: "Banir este usuário? As sessões serão encerradas."
+      reset_password: "Redefinir a senha deste usuário?"
+      remove_mime_type: "Remover este tipo MIME?"
+    storage:
+      label: "Armazenamento"
+      used: "%{used} / %{total} utilizado"
+      almost_full: "Armazenamento quase cheio. Exclua arquivos para liberar espaço."
+
+  setup:
+    new:
+      heading: "Crie sua conta de administrador"
+      submit: "Criar Conta Admin"
+
+  sessions:
+    new:
+      heading: "Entre na sua conta"
+      submit: "Entrar"
+      forgot_password: "Esqueceu a senha?"
+      passkey_button: "Entrar com Passkey"
+
+  registrations:
+    new:
+      heading: "Crie sua conta"
+      submit: "Criar Conta"
+      already_have_account: "Já tem uma conta?"
+      sign_in: "Entrar"
+
+  passwords:
+    new:
+      heading: "Redefinir Senha"
+      subtitle: "Informe seu e-mail para receber instruções de redefinição"
+      submit: "Enviar Link de Redefinição"
+      back_to_sign_in: "Voltar ao login"
+    edit:
+      heading: "Definir Nova Senha"
+      subtitle: "Digite sua nova senha"
+      new_password: "Nova Senha"
+      submit: "Redefinir Senha"
+
+  two_factor:
+    new:
+      heading: "Ativar Autenticação de Dois Fatores"
+      instructions: "Escaneie este QR code com seu aplicativo autenticador (Google Authenticator, Authy, etc.)"
+      verification_code: "Código de Verificação"
+      code_hint: "Digite o código de 6 dígitos do seu aplicativo autenticador para confirmar"
+      submit: "Ativar 2FA"
+
+  two_factor_sessions:
+    new:
+      heading: "Autenticação de Dois Fatores"
+      subtitle: "Digite o código do seu aplicativo autenticador"
+      label: "Código de Autenticação"
+      submit: "Verificar"
+
+  profiles:
+    show:
+      heading: "Perfil"
+      change_password: "Alterar Senha"
+      new_password: "Nova Senha"
+      update_password: "Atualizar Senha"
+      two_factor_auth: "Autenticação de Dois Fatores"
+      enter_code_to_disable: "Digite o código para desativar"
+      disable_2fa: "Desativar 2FA"
+      two_factor_description: "Adicione uma camada extra de segurança à sua conta."
+      enable_2fa: "Ativar 2FA"
+      passkeys: "Passkeys"
+      add_passkey: "Adicionar Passkey"
+      added_ago: "Adicionada há %{time}"
+      no_passkeys: "Nenhuma passkey registrada. Adicione uma para login sem senha."
+      active_sessions: "Sessões Ativas"
+      current_session: "(atual)"
+
+  uploads:
+    new:
+      heading: "Enviar Arquivo"
+      drag_drop: "Arraste e solte seu arquivo aqui, ou"
+      max_file_size: "Tamanho máximo: 1 GB"
+      max_downloads: "Downloads Máximos"
+      ttl_hours: "Expira Após (horas)"
+      submit: "Enviar e Compartilhar"
+      active_files: "Arquivos Ativos"
+      expired_exhausted: "Expirados / Esgotados"
+    show:
+      heading: "Arquivo Enviado!"
+      filename: "Nome do Arquivo"
+      size: "Tamanho"
+      downloads: "Downloads"
+      expires: "Expira"
+      share_link: "Link de Compartilhamento"
+      qr_code: "QR Code"
+      back_to_home: "Voltar ao Início"
+    shared_file:
+      downloads: "downloads"
+
+  downloads:
+    show:
+      size: "Tamanho"
+      downloads_remaining: "Downloads restantes"
+      download: "Baixar"
+      expiry_note: "Este link expirará automaticamente."
+
+  dashboard:
+    index:
+      heading: "Painel"
+      upload_file: "Enviar Arquivo"
+      no_files: "Nenhum arquivo enviado ainda."
+      upload_first: "Envie seu primeiro arquivo"
+      active_files: "Arquivos Ativos"
+      expired_exhausted: "Expirados / Esgotados"
+
+  admin:
+    nav:
+      users: "Usuários"
+      invitations: "Convites"
+      files: "Arquivos"
+      mime_types: "Tipos MIME"
+    users:
+      index:
+        heading: "Usuários"
+        email: "E-mail"
+        role: "Papel"
+        status: "Status"
+        created: "Criado em"
+        actions: "Ações"
+      show:
+        heading: "Detalhes do Usuário"
+        role: "Papel"
+        status: "Status"
+        two_factor: "2FA"
+        files: "Arquivos"
+        storage: "Armazenamento"
+        custom_quota: "(personalizado)"
+        ban: "Banir"
+        unban: "Desbanir"
+        reset_password: "Redefinir Senha"
+        temp_password_heading: "Senha temporária (exibida apenas uma vez):"
+        temp_password_warning: "Copie esta senha agora. Ela não será exibida novamente."
+      edit:
+        heading: "Editar Usuário"
+        disk_quota_label: "Cota de Disco (GB)"
+        disk_quota_hint: "Deixe em branco para usar o padrão do sistema"
+    invitations:
+      index:
+        heading: "Convites"
+        create_invitation: "Criar Convite"
+        code: "Código"
+        created_by: "Criado Por"
+        status: "Status"
+        expires: "Expira"
+        actions: "Ações"
+        revoke: "Revogar"
+      new:
+        heading: "Criar Convite"
+        expires_at: "Expira Em"
+    shared_files:
+      index:
+        heading: "Todos os Arquivos Compartilhados"
+        file: "Arquivo"
+        user: "Usuário"
+        downloads: "Downloads"
+        status: "Status"
+        actions: "Ações"
+      show:
+        heading: "Detalhes do Arquivo Compartilhado"
+        filename: "Nome do Arquivo"
+        uploaded_by: "Enviado por"
+        content_type: "Tipo de Conteúdo"
+        file_size: "Tamanho do Arquivo"
+        downloads: "Downloads"
+        expires_at: "Expira Em"
+        status: "Status"
+        download_hash: "Hash de Download"
+        back_to_files: "Voltar aos Arquivos"
+    allowed_mime_types:
+      index:
+        heading: "Tipos MIME Permitidos"
+        add_type: "Adicionar Tipo"
+        mime_type: "Tipo MIME"
+        description: "Descrição"
+        status: "Status"
+        actions: "Ações"
+      new:
+        heading: "Adicionar Tipo MIME"
+        mime_type_placeholder: "ex: application/pdf"
+        description_placeholder: "ex: Documento PDF"
+        enabled: "Ativado"
+        submit: "Adicionar"
+
+  flash:
+    setup:
+      create:
+        notice: "Conta de administrador criada. Bem-vindo ao FrankMega!"
+    sessions:
+      create:
+        rate_limit: "Tente novamente mais tarde."
+        invalid_credentials: "Tente outro endereço de e-mail ou senha."
+        account_suspended: "Sua conta foi suspensa."
+    registrations:
+      create:
+        notice: "Conta criada com sucesso."
+        invalid_invitation: "Convite inválido ou expirado."
+    passwords:
+      create:
+        rate_limit: "Tente novamente mais tarde."
+        notice: "Instruções de redefinição de senha enviadas (se existir usuário com esse e-mail)."
+      update:
+        notice: "Senha redefinida com sucesso."
+        alert: "As senhas não coincidem."
+      invalid_token: "Link de redefinição de senha inválido ou expirado."
+    two_factor:
+      create:
+        notice: "Autenticação de dois fatores ativada."
+        alert: "Código inválido. Tente novamente."
+      destroy:
+        notice: "Autenticação de dois fatores desativada."
+        alert: "Código inválido. 2FA não desativado."
+    two_factor_sessions:
+      create:
+        rate_limit: "Muitas tentativas. Tente novamente mais tarde."
+        alert: "Código inválido. Tente novamente."
+      login_required: "Faça login primeiro."
+    profiles:
+      update:
+        notice: "Perfil atualizado."
+    uploads:
+      destroy:
+        notice: "Arquivo excluído."
+    admin:
+      users:
+        update:
+          notice: "Usuário atualizado."
+          last_admin_role: "Não é possível remover o papel de admin do último administrador."
+        destroy:
+          notice: "Usuário excluído."
+          last_admin: "Não é possível excluir o último administrador."
+        ban:
+          notice: "Usuário banido."
+          last_admin: "Não é possível banir o último administrador."
+        unban:
+          notice: "Usuário desbanido."
+      invitations:
+        create:
+          notice: "Convite criado: %{url}"
+        destroy:
+          notice: "Convite revogado."
+      shared_files:
+        destroy:
+          notice: "Arquivo excluído."
+      allowed_mime_types:
+        create:
+          notice: "Tipo MIME adicionado."
+        destroy:
+          notice: "Tipo MIME removido."
+    webauthn:
+      credentials:
+        destroy:
+          notice: "Passkey removida."
+      sessions:
+        create:
+          account_suspended: "Conta suspensa."
+
+  activerecord:
+    errors:
+      models:
+        shared_file:
+          attributes:
+            content_type:
+              file_type_not_allowed: "%{type} não é um tipo de arquivo permitido"
+            file:
+              file_must_be_attached: "deve ser anexado"
+            base:
+              quota_exceeded: "O envio excederia sua cota de armazenamento (limite de %{quota})"
+
+  passwords_mailer:
+    reset:
+      subject: "Redefinir sua senha"
+      body_html: "Você pode redefinir sua senha em %{link}. Este link expirará em %{expiry}."
+      body_text: "Você pode redefinir sua senha em %{url}\n\nEste link expirará em %{expiry}."
+      link_text: "esta página de redefinição de senha"
+
+  js:
+    copied: "Copiado!"
+    passkey_name_prompt: "Dê um nome para esta passkey:"
+    passkey_default_name: "Minha Passkey"
+    passkey_register_failed: "Falha ao registrar passkey: "
+    passkey_auth_failed: "Falha na autenticação: "
+    unknown_error: "Erro desconhecido"

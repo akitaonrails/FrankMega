@@ -6,54 +6,55 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">File Uploaded!</h1>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><%= t("uploads.show.heading") %></h1>
     </div>
 
     <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
       <dl class="space-y-2 text-sm">
         <div class="flex justify-between">
-          <dt class="text-gray-500 dark:text-gray-400">Filename</dt>
+          <dt class="text-gray-500 dark:text-gray-400"><%= t("uploads.show.filename") %></dt>
           <dd class="font-medium text-gray-900 dark:text-white"><%= @shared_file.original_filename %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-gray-500 dark:text-gray-400">Size</dt>
+          <dt class="text-gray-500 dark:text-gray-400"><%= t("uploads.show.size") %></dt>
           <dd class="font-medium text-gray-900 dark:text-white"><%= number_to_human_size(@shared_file.file_size) %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-gray-500 dark:text-gray-400">Downloads</dt>
+          <dt class="text-gray-500 dark:text-gray-400"><%= t("uploads.show.downloads") %></dt>
           <dd class="font-medium text-gray-900 dark:text-white"><%= @shared_file.download_count %>/<%= @shared_file.max_downloads %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-gray-500 dark:text-gray-400">Expires</dt>
+          <dt class="text-gray-500 dark:text-gray-400"><%= t("uploads.show.expires") %></dt>
           <dd class="font-medium text-gray-900 dark:text-white"><%= time_ago_in_words(@shared_file.expires_at) %></dd>
         </div>
       </dl>
     </div>
 
     <%# Download link %>
-    <div class="mb-6" data-controller="clipboard">
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Share Link</label>
+    <div class="mb-6" data-controller="clipboard"
+         data-clipboard-copied-text-value="<%= t('js.copied') %>">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><%= t("uploads.show.share_link") %></label>
       <div class="flex">
         <input type="text" readonly value="<%= request.base_url %>/d/<%= @shared_file.download_hash %>"
                data-clipboard-target="source"
                class="flex-1 px-4 py-3 rounded-l-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white bg-gray-50 text-sm">
         <button type="button" data-action="click->clipboard#copy"
                 class="px-4 py-3 bg-primary hover:bg-primary-hover text-white font-semibold rounded-r-lg transition-colors text-sm">
-          Copy
+          <%= t("shared.actions.copy") %>
         </button>
       </div>
     </div>
 
     <%# QR Code %>
     <div class="text-center mb-6">
-      <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">QR Code</p>
+      <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"><%= t("uploads.show.qr_code") %></p>
       <div class="inline-block bg-white p-4 rounded-lg">
         <%= @qr_code.as_svg(module_size: 4, standalone: true, use_path: true).html_safe %>
       </div>
     </div>
 
     <div class="flex justify-center">
-      <%= link_to "Back to Home", new_upload_path, class: "py-3 px-8 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors text-center" %>
+      <%= link_to t("uploads.show.back_to_home"), new_upload_path, class: "py-3 px-8 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors text-center" %>
     </div>
   </div>
 </div>

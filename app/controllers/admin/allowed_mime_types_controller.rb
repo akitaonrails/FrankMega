@@ -12,7 +12,7 @@ module Admin
       @mime_type = AllowedMimeType.new(mime_type_params)
 
       if @mime_type.save
-        redirect_to admin_allowed_mime_types_path, notice: "MIME type added."
+        redirect_to admin_allowed_mime_types_path, notice: t("flash.admin.allowed_mime_types.create.notice")
       else
         render :new, status: :unprocessable_entity
       end
@@ -20,7 +20,7 @@ module Admin
 
     def destroy
       AllowedMimeType.find(params[:id]).destroy
-      redirect_to admin_allowed_mime_types_path, notice: "MIME type removed."
+      redirect_to admin_allowed_mime_types_path, notice: t("flash.admin.allowed_mime_types.destroy.notice")
     end
 
     private

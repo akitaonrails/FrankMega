@@ -1,7 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static values = { challengeUrl: String }
+  static values = {
+    challengeUrl: String,
+    prompt: { type: String, default: "Give this passkey a name:" },
+    defaultName: { type: String, default: "My Passkey" },
+    registerFailed: { type: String, default: "Failed to register passkey: " },
+    authFailed: { type: String, default: "Authentication failed: " },
+    unknownError: { type: String, default: "Unknown error" }
+  }
 
   async register() {
     try {
@@ -22,7 +29,7 @@ export default class extends Controller {
 
       const credential = await navigator.credentials.create({ publicKey: options })
 
-      const nickname = prompt("Give this passkey a name:", "My Passkey")
+      const nickname = prompt(this.promptValue, this.defaultNameValue)
       if (!nickname) return
 
       const createResponse = await fetch("/webauthn/credentials", {
@@ -42,7 +49,7 @@ export default class extends Controller {
         window.location.reload()
       } else {
         const error = await createResponse.json()
-        alert("Failed to register passkey: " + (error.error || "Unknown error"))
+        alert(this.registerFailedValue + (error.error || this.unknownErrorValue))
       }
     } catch (e) {
       if (e.name !== "NotAllowedError") {
@@ -87,7 +94,7 @@ export default class extends Controller {
       if (authResponse.ok && result.redirect_to) {
         window.location.href = result.redirect_to
       } else {
-        alert("Authentication failed: " + (result.error || "Unknown error"))
+        alert(this.authFailedValue + (result.error || this.unknownErrorValue))
       }
     } catch (e) {
       if (e.name !== "NotAllowedError") {

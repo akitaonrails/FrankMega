@@ -2,12 +2,12 @@
 
 <div class="max-w-4xl mx-auto py-8">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= t("dashboard.index.heading") %></h1>
     <%= link_to new_upload_path, class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors flex items-center gap-2" do %>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
-      Upload File
+      <%= t("dashboard.index.upload_file") %>
     <% end %>
   </div>
 
@@ -25,12 +25,12 @@
       <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
       </svg>
-      <p class="mt-4 text-gray-500 dark:text-gray-400">No files uploaded yet.</p>
-      <%= link_to "Upload your first file", new_upload_path, class: "mt-2 inline-block text-primary hover:underline" %>
+      <p class="mt-4 text-gray-500 dark:text-gray-400"><%= t("dashboard.index.no_files") %></p>
+      <%= link_to t("dashboard.index.upload_first"), new_upload_path, class: "mt-2 inline-block text-primary hover:underline" %>
     </div>
   <% else %>
     <% if @active_files.any? %>
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Active Files</h2>
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3"><%= t("dashboard.index.active_files") %></h2>
       <div class="space-y-3 mb-8">
         <% @active_files.each do |shared_file| %>
           <%= render "uploads/shared_file", shared_file: shared_file %>
@@ -39,7 +39,7 @@
     <% end %>
 
     <% if @inactive_files.any? %>
-      <h2 class="text-lg font-semibold text-gray-500 dark:text-gray-400 mb-3">Expired / Exhausted</h2>
+      <h2 class="text-lg font-semibold text-gray-500 dark:text-gray-400 mb-3"><%= t("dashboard.index.expired_exhausted") %></h2>
       <div class="space-y-3 opacity-60">
         <% @inactive_files.each do |shared_file| %>
           <%= render "uploads/shared_file", shared_file: shared_file %>

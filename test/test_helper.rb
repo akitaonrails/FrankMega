@@ -1,3 +1,6 @@
+# Silence frozen string warnings from marcel gem (Ruby 3.4+)
+Warning[:deprecated] = false
+
 require "simplecov"
 SimpleCov.start "rails" do
   enable_coverage :branch

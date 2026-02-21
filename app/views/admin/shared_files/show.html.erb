@@ -1,0 +1,58 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <%= render "admin/shared/nav" %>
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6"><%= t("admin.shared_files.show.heading") %></h1>
+
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6 space-y-4">
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.filename") %></span>
+      <p class="text-gray-900 dark:text-white"><%= @shared_file.original_filename %></p>
+    </div>
+
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.uploaded_by") %></span>
+      <p class="text-gray-900 dark:text-white"><%= @shared_file.user.email_address %></p>
+    </div>
+
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.content_type") %></span>
+      <p class="text-gray-900 dark:text-white"><%= @shared_file.content_type %></p>
+    </div>
+
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.file_size") %></span>
+      <p class="text-gray-900 dark:text-white"><%= number_to_human_size(@shared_file.file_size) %></p>
+    </div>
+
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.downloads") %></span>
+      <p class="text-gray-900 dark:text-white"><%= @shared_file.download_count %> / <%= @shared_file.max_downloads %></p>
+    </div>
+
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.expires_at") %></span>
+      <p class="text-gray-900 dark:text-white"><%= @shared_file.expires_at.strftime("%Y-%m-%d %H:%M UTC") %></p>
+    </div>
+
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.status") %></span>
+      <p>
+        <% if @shared_file.active? %>
+          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"><%= t("shared.status.active") %></span>
+        <% else %>
+          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"><%= t("shared.status.inactive") %></span>
+        <% end %>
+      </p>
+    </div>
+
+    <div>
+      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= t("admin.shared_files.show.download_hash") %></span>
+      <p class="text-gray-900 dark:text-white font-mono text-sm"><%= @shared_file.download_hash %></p>
+    </div>
+
+    <div class="flex gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <%= link_to t("admin.shared_files.show.back_to_files"), admin_shared_files_path, class: "text-blue-600 hover:text-blue-800 dark:text-blue-400" %>
+      <%= button_to t("shared.actions.delete"), admin_shared_file_path(@shared_file), method: :delete, class: "text-red-600 hover:text-red-800 dark:text-red-400",
+          data: { turbo_confirm: t("shared.confirm.delete_file") } %>
+    </div>
+  </div>
+</div>

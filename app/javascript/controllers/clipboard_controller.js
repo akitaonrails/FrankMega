@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["source"]
+  static values = { copiedText: { type: String, default: "Copied!" } }
 
   async copy() {
     const text = this.sourceTarget.value || this.sourceTarget.textContent
@@ -10,7 +11,7 @@ export default class extends Controller {
       const button = this.element.querySelector("button")
       if (button) {
         const original = button.textContent
-        button.textContent = "Copied!"
+        button.textContent = this.copiedTextValue
         setTimeout(() => { button.textContent = original }, 2000)
       }
     } catch {

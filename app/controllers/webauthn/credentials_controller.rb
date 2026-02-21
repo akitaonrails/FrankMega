@@ -35,7 +35,7 @@ module Webauthn
     def destroy
       credential = current_user.webauthn_credentials.find(params[:id])
       credential.destroy
-      redirect_to profile_path, notice: "Passkey removed."
+      redirect_to profile_path, notice: t("flash.webauthn.credentials.destroy.notice")
     end
   end
 end

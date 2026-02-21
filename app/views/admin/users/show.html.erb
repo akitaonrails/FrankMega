@@ -1,7 +1,7 @@
 <div class="max-w-4xl mx-auto px-4 py-8 space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= @user.email_address %></h1>
-    <%= link_to "Back", admin_users_path, class: "text-primary hover:underline" %>
+    <%= link_to t("shared.actions.back"), admin_users_path, class: "text-primary hover:underline" %>
   </div>
 
   <% if flash[:alert] %>
@@ -18,36 +18,36 @@
 
   <% if flash[:temp_password] %>
     <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-sm">
-      <p class="font-semibold text-yellow-800 dark:text-yellow-300">Temporary password (shown only once):</p>
+      <p class="font-semibold text-yellow-800 dark:text-yellow-300"><%= t("admin.users.show.temp_password_heading") %></p>
       <code class="block mt-1 font-mono text-lg text-yellow-900 dark:text-yellow-100 select-all"><%= flash[:temp_password] %></code>
-      <p class="mt-2 text-yellow-600 dark:text-yellow-400">Copy this password now. It will not be shown again.</p>
+      <p class="mt-2 text-yellow-600 dark:text-yellow-400"><%= t("admin.users.show.temp_password_warning") %></p>
     </div>
   <% end %>
 
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6">
     <dl class="grid grid-cols-2 gap-4 text-sm">
       <div>
-        <dt class="text-gray-500 dark:text-gray-400">Role</dt>
+        <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.users.show.role") %></dt>
         <dd class="font-medium text-gray-900 dark:text-white"><%= @user.role %></dd>
       </div>
       <div>
-        <dt class="text-gray-500 dark:text-gray-400">Status</dt>
-        <dd class="font-medium"><%= @user.banned? ? "Banned" : "Active" %></dd>
+        <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.users.show.status") %></dt>
+        <dd class="font-medium"><%= @user.banned? ? t("shared.status.banned") : t("shared.status.active") %></dd>
       </div>
       <div>
-        <dt class="text-gray-500 dark:text-gray-400">2FA</dt>
-        <dd class="font-medium"><%= @user.otp_required? ? "Enabled" : "Disabled" %></dd>
+        <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.users.show.two_factor") %></dt>
+        <dd class="font-medium"><%= @user.otp_required? ? t("shared.status.enabled") : t("shared.status.disabled") %></dd>
       </div>
       <div>
-        <dt class="text-gray-500 dark:text-gray-400">Files</dt>
+        <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.users.show.files") %></dt>
         <dd class="font-medium"><%= @user.shared_files.count %></dd>
       </div>
       <div>
-        <dt class="text-gray-500 dark:text-gray-400">Storage</dt>
+        <dt class="text-gray-500 dark:text-gray-400"><%= t("admin.users.show.storage") %></dt>
         <dd class="font-medium">
           <%= number_to_human_size(@user.storage_used) %> / <%= number_to_human_size(@user.disk_quota) %>
           <% if @user.disk_quota_bytes %>
-            <span class="text-xs text-gray-400">(custom)</span>
+            <span class="text-xs text-gray-400"><%= t("admin.users.show.custom_quota") %></span>
           <% end %>
         </dd>
       </div>
@@ -56,18 +56,18 @@
 
   <div class="flex gap-3">
     <% if @user.banned? %>
-      <%= button_to "Unban", unban_admin_user_path(@user), class: "py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors" %>
+      <%= button_to t("admin.users.show.unban"), unban_admin_user_path(@user), class: "py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors" %>
     <% else %>
-      <%= button_to "Ban", ban_admin_user_path(@user), class: "py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors",
-          data: { turbo_confirm: "Ban this user? Their sessions will be destroyed." } %>
+      <%= button_to t("admin.users.show.ban"), ban_admin_user_path(@user), class: "py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors",
+          data: { turbo_confirm: t("shared.confirm.ban_user") } %>
     <% end %>
-    <%= button_to "Reset Password", reset_password_admin_user_path(@user), class: "py-2 px-4 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors",
-        data: { turbo_confirm: "Reset this user's password?" } %>
-    <%= link_to "Edit", edit_admin_user_path(@user), class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>
+    <%= button_to t("admin.users.show.reset_password"), reset_password_admin_user_path(@user), class: "py-2 px-4 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors",
+        data: { turbo_confirm: t("shared.confirm.reset_password") } %>
+    <%= link_to t("shared.actions.edit"), edit_admin_user_path(@user), class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>
   </div>
 
   <% if @shared_files.any? %>
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Files</h2>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white"><%= t("admin.users.show.files") %></h2>
     <div class="space-y-2">
       <% @shared_files.each do |sf| %>
         <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 flex items-center justify-between text-sm">

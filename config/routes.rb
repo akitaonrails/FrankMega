@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
 
   # 2FA
-  resource :two_factor, only: %i[new create destroy]
+  resource :two_factor, only: %i[new create destroy], controller: "two_factor"
   resource :two_factor_session, only: %i[new create]
 
   # WebAuthn / Passkeys

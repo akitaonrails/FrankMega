@@ -1,5 +1,5 @@
 <div class="max-w-4xl mx-auto py-8 space-y-8">
-  <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Profile</h1>
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= t("profiles.show.heading") %></h1>
 
   <% if flash[:notice] %>
     <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-sm text-green-700 dark:text-green-300">
@@ -15,13 +15,13 @@
 
   <%# Change Password %>
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6">
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Change Password</h2>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4"><%= t("profiles.show.change_password") %></h2>
 
     <%= render "shared/form_errors", resource: @user %>
 
     <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-4" do |f| %>
       <div>
-        <%= f.label :password, "New Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.label :password, t("profiles.show.new_password"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.password_field :password, autocomplete: "new-password",
             class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
       </div>
@@ -30,42 +30,47 @@
         <%= f.password_field :password_confirmation, autocomplete: "new-password",
             class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
       </div>
-      <%= f.submit "Update Password", class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+      <%= f.submit t("profiles.show.update_password"), class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
     <% end %>
   </div>
 
   <%# Two-Factor Authentication %>
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6">
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Two-Factor Authentication</h2>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4"><%= t("profiles.show.two_factor_auth") %></h2>
 
     <% if @user.otp_required? %>
       <div class="flex items-center gap-3 mb-4">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">Enabled</span>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"><%= t("shared.status.enabled") %></span>
       </div>
       <%= form_with url: two_factor_path, method: :delete, class: "space-y-4" do |f| %>
         <div>
-          <%= f.label :otp_code, "Enter code to disable", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.label :otp_code, t("profiles.show.enter_code_to_disable"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
           <%= f.text_field :otp_code, required: true, inputmode: "numeric", pattern: "[0-9]{6}", maxlength: 6,
               class: "w-64 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
         </div>
-        <%= f.submit "Disable 2FA", class: "py-2 px-4 bg-danger hover:bg-red-700 text-white font-semibold rounded-lg transition-colors cursor-pointer",
-            data: { turbo_confirm: "Are you sure you want to disable 2FA?" } %>
+        <%= f.submit t("profiles.show.disable_2fa"), class: "py-2 px-4 bg-danger hover:bg-red-700 text-white font-semibold rounded-lg transition-colors cursor-pointer",
+            data: { turbo_confirm: t("shared.confirm.disable_2fa") } %>
       <% end %>
     <% else %>
-      <p class="text-gray-600 dark:text-gray-400 mb-4">Add an extra layer of security to your account.</p>
-      <%= link_to "Enable 2FA", new_two_factor_path, class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors inline-block" %>
+      <p class="text-gray-600 dark:text-gray-400 mb-4"><%= t("profiles.show.two_factor_description") %></p>
+      <%= link_to t("profiles.show.enable_2fa"), new_two_factor_path, class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors inline-block" %>
     <% end %>
   </div>
 
   <%# Passkeys %>
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Passkeys</h2>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white"><%= t("profiles.show.passkeys") %></h2>
       <button type="button"
               data-controller="webauthn"
               data-action="click->webauthn#register"
+              data-webauthn-prompt-value="<%= t('js.passkey_name_prompt') %>"
+              data-webauthn-default-name-value="<%= t('js.passkey_default_name') %>"
+              data-webauthn-register-failed-value="<%= t('js.passkey_register_failed') %>"
+              data-webauthn-auth-failed-value="<%= t('js.passkey_auth_failed') %>"
+              data-webauthn-unknown-error-value="<%= t('js.unknown_error') %>"
               class="py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors text-sm">
-        Add Passkey
+        <%= t("profiles.show.add_passkey") %>
       </button>
     </div>
 
@@ -75,22 +80,22 @@
           <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <div>
               <p class="font-medium text-gray-900 dark:text-white"><%= credential.nickname %></p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Added <%= time_ago_in_words(credential.created_at) %> ago</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400"><%= t("profiles.show.added_ago", time: time_ago_in_words(credential.created_at)) %></p>
             </div>
-            <%= button_to "Remove", webauthn_credential_path(credential), method: :delete,
+            <%= button_to t("shared.actions.remove"), webauthn_credential_path(credential), method: :delete,
                 class: "text-sm text-red-600 hover:text-red-800 dark:text-red-400",
-                data: { turbo_confirm: "Remove this passkey?" } %>
+                data: { turbo_confirm: t("shared.confirm.remove_passkey") } %>
           </div>
         <% end %>
       </div>
     <% else %>
-      <p class="text-gray-500 dark:text-gray-400">No passkeys registered. Add one for passwordless login.</p>
+      <p class="text-gray-500 dark:text-gray-400"><%= t("profiles.show.no_passkeys") %></p>
     <% end %>
   </div>
 
   <%# Active Sessions %>
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6">
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Active Sessions</h2>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4"><%= t("profiles.show.active_sessions") %></h2>
     <div class="space-y-3">
       <% @sessions.each do |sess| %>
         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -99,7 +104,7 @@
             <p class="text-xs text-gray-500 dark:text-gray-400">
               <%= sess.ip_address %> &middot; <%= time_ago_in_words(sess.created_at) %> ago
               <% if sess == Current.session %>
-                <span class="text-green-600 dark:text-green-400 font-medium">(current)</span>
+                <span class="text-green-600 dark:text-green-400 font-medium"><%= t("profiles.show.current_session") %></span>
               <% end %>
             </p>
           </div>

@@ -37,7 +37,7 @@ class User < ApplicationRecord
     update!(banned: false, banned_at: nil)
   end
 
-  def otp_provisioning_uri(issuer: "FrankMega")
+  def otp_provisioning_uri(issuer: I18n.t("app_name"))
     return nil unless otp_secret.present?
     totp = ROTP::TOTP.new(otp_secret, issuer: issuer)
     totp.provisioning_uri(email_address)

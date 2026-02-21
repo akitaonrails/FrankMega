@@ -1,16 +1,16 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
   <%= render "admin/shared/nav" %>
-  <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Users</h1>
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6"><%= t("admin.users.index.heading") %></h1>
 
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow overflow-hidden">
     <table class="w-full">
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.email") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.role") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.status") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.created") %></th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><%= t("admin.users.index.actions") %></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -24,14 +24,14 @@
             </td>
             <td class="px-6 py-4 text-sm">
               <% if user.banned? %>
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300">Banned</span>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"><%= t("shared.status.banned") %></span>
               <% else %>
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Active</span>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"><%= t("shared.status.active") %></span>
               <% end %>
             </td>
             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><%= user.created_at.strftime("%Y-%m-%d") %></td>
             <td class="px-6 py-4 text-sm">
-              <%= link_to "View", admin_user_path(user), class: "text-primary hover:underline" %>
+              <%= link_to t("shared.actions.view"), admin_user_path(user), class: "text-primary hover:underline" %>
             </td>
           </tr>
         <% end %>

@@ -1,31 +1,327 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  app_name: "FrankMega"
+
+  shared:
+    navbar:
+      admin: "Admin"
+      profile: "Profile"
+      log_out: "Log out"
+    form_errors:
+      heading:
+        one: "1 error prohibited this from being saved:"
+        other: "%{count} errors prohibited this from being saved:"
+    download_toast:
+      file_downloaded: "File downloaded"
+    status:
+      active: "Active"
+      inactive: "Inactive"
+      expired: "Expired"
+      exhausted: "Exhausted"
+      enabled: "Enabled"
+      disabled: "Disabled"
+      banned: "Banned"
+      pending: "pending"
+      used: "used"
+    actions:
+      edit: "Edit"
+      delete: "Delete"
+      cancel: "Cancel"
+      update: "Update"
+      back: "Back"
+      create: "Create"
+      remove: "Remove"
+      view: "View"
+      copy: "Copy"
+      download: "Download"
+    confirm:
+      delete_file: "Delete this file?"
+      revoke_invitation: "Revoke this invitation?"
+      remove_passkey: "Remove this passkey?"
+      disable_2fa: "Are you sure you want to disable 2FA?"
+      ban_user: "Ban this user? Their sessions will be destroyed."
+      reset_password: "Reset this user's password?"
+      remove_mime_type: "Remove this MIME type?"
+    storage:
+      label: "Storage"
+      used: "%{used} / %{total} used"
+      almost_full: "Storage almost full. Delete files to free up space."
+
+  setup:
+    new:
+      heading: "Create your admin account"
+      submit: "Create Admin Account"
+
+  sessions:
+    new:
+      heading: "Sign in to your account"
+      submit: "Sign in"
+      forgot_password: "Forgot password?"
+      passkey_button: "Sign in with Passkey"
+
+  registrations:
+    new:
+      heading: "Create your account"
+      submit: "Create Account"
+      already_have_account: "Already have an account?"
+      sign_in: "Sign in"
+
+  passwords:
+    new:
+      heading: "Reset Password"
+      subtitle: "Enter your email to receive reset instructions"
+      submit: "Send Reset Link"
+      back_to_sign_in: "Back to sign in"
+    edit:
+      heading: "Set New Password"
+      subtitle: "Enter your new password"
+      new_password: "New Password"
+      submit: "Reset Password"
+
+  two_factor:
+    new:
+      heading: "Enable Two-Factor Authentication"
+      instructions: "Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)"
+      verification_code: "Verification Code"
+      code_hint: "Enter the 6-digit code from your authenticator app to confirm setup"
+      submit: "Enable 2FA"
+
+  two_factor_sessions:
+    new:
+      heading: "Two-Factor Authentication"
+      subtitle: "Enter the code from your authenticator app"
+      label: "Authentication Code"
+      submit: "Verify"
+
+  profiles:
+    show:
+      heading: "Profile"
+      change_password: "Change Password"
+      new_password: "New Password"
+      update_password: "Update Password"
+      two_factor_auth: "Two-Factor Authentication"
+      enter_code_to_disable: "Enter code to disable"
+      disable_2fa: "Disable 2FA"
+      two_factor_description: "Add an extra layer of security to your account."
+      enable_2fa: "Enable 2FA"
+      passkeys: "Passkeys"
+      add_passkey: "Add Passkey"
+      added_ago: "Added %{time} ago"
+      no_passkeys: "No passkeys registered. Add one for passwordless login."
+      active_sessions: "Active Sessions"
+      current_session: "(current)"
+
+  uploads:
+    new:
+      heading: "Upload File"
+      drag_drop: "Drag and drop your file here, or"
+      max_file_size: "Max file size: 1 GB"
+      max_downloads: "Max Downloads"
+      ttl_hours: "Expires After (hours)"
+      submit: "Upload & Share"
+      active_files: "Active Files"
+      expired_exhausted: "Expired / Exhausted"
+    show:
+      heading: "File Uploaded!"
+      filename: "Filename"
+      size: "Size"
+      downloads: "Downloads"
+      expires: "Expires"
+      share_link: "Share Link"
+      qr_code: "QR Code"
+      back_to_home: "Back to Home"
+    shared_file:
+      downloads: "downloads"
+
+  downloads:
+    show:
+      size: "Size"
+      downloads_remaining: "Downloads remaining"
+      download: "Download"
+      expiry_note: "This link will expire automatically."
+
+  dashboard:
+    index:
+      heading: "Dashboard"
+      upload_file: "Upload File"
+      no_files: "No files uploaded yet."
+      upload_first: "Upload your first file"
+      active_files: "Active Files"
+      expired_exhausted: "Expired / Exhausted"
+
+  admin:
+    nav:
+      users: "Users"
+      invitations: "Invitations"
+      files: "Files"
+      mime_types: "MIME Types"
+    users:
+      index:
+        heading: "Users"
+        email: "Email"
+        role: "Role"
+        status: "Status"
+        created: "Created"
+        actions: "Actions"
+      show:
+        heading: "User Details"
+        role: "Role"
+        status: "Status"
+        two_factor: "2FA"
+        files: "Files"
+        storage: "Storage"
+        custom_quota: "(custom)"
+        ban: "Ban"
+        unban: "Unban"
+        reset_password: "Reset Password"
+        temp_password_heading: "Temporary password (shown only once):"
+        temp_password_warning: "Copy this password now. It will not be shown again."
+      edit:
+        heading: "Edit User"
+        disk_quota_label: "Disk Quota (GB)"
+        disk_quota_hint: "Leave blank to use system default"
+    invitations:
+      index:
+        heading: "Invitations"
+        create_invitation: "Create Invitation"
+        code: "Code"
+        created_by: "Created By"
+        status: "Status"
+        expires: "Expires"
+        actions: "Actions"
+        revoke: "Revoke"
+      new:
+        heading: "Create Invitation"
+        expires_at: "Expires At"
+    shared_files:
+      index:
+        heading: "All Shared Files"
+        file: "File"
+        user: "User"
+        downloads: "Downloads"
+        status: "Status"
+        actions: "Actions"
+      show:
+        heading: "Shared File Details"
+        filename: "Filename"
+        uploaded_by: "Uploaded by"
+        content_type: "Content Type"
+        file_size: "File Size"
+        downloads: "Downloads"
+        expires_at: "Expires At"
+        status: "Status"
+        download_hash: "Download Hash"
+        back_to_files: "Back to Files"
+    allowed_mime_types:
+      index:
+        heading: "Allowed MIME Types"
+        add_type: "Add Type"
+        mime_type: "MIME Type"
+        description: "Description"
+        status: "Status"
+        actions: "Actions"
+      new:
+        heading: "Add MIME Type"
+        mime_type_placeholder: "e.g. application/pdf"
+        description_placeholder: "e.g. PDF Document"
+        enabled: "Enabled"
+        submit: "Add"
+
+  flash:
+    setup:
+      create:
+        notice: "Admin account created. Welcome to FrankMega!"
+    sessions:
+      create:
+        rate_limit: "Try again later."
+        invalid_credentials: "Try another email address or password."
+        account_suspended: "Your account has been suspended."
+    registrations:
+      create:
+        notice: "Account created successfully."
+        invalid_invitation: "Invalid or expired invitation."
+    passwords:
+      create:
+        rate_limit: "Try again later."
+        notice: "Password reset instructions sent (if user with that email address exists)."
+      update:
+        notice: "Password has been reset."
+        alert: "Passwords did not match."
+      invalid_token: "Password reset link is invalid or has expired."
+    two_factor:
+      create:
+        notice: "Two-factor authentication enabled."
+        alert: "Invalid code. Please try again."
+      destroy:
+        notice: "Two-factor authentication disabled."
+        alert: "Invalid code. 2FA not disabled."
+    two_factor_sessions:
+      create:
+        rate_limit: "Too many attempts. Try again later."
+        alert: "Invalid code. Please try again."
+      login_required: "Please log in first."
+    profiles:
+      update:
+        notice: "Profile updated."
+    uploads:
+      destroy:
+        notice: "File deleted."
+    admin:
+      users:
+        update:
+          notice: "User updated."
+          last_admin_role: "Cannot remove admin role from the last admin."
+        destroy:
+          notice: "User deleted."
+          last_admin: "Cannot delete the last admin."
+        ban:
+          notice: "User banned."
+          last_admin: "Cannot ban the last admin."
+        unban:
+          notice: "User unbanned."
+      invitations:
+        create:
+          notice: "Invitation created: %{url}"
+        destroy:
+          notice: "Invitation revoked."
+      shared_files:
+        destroy:
+          notice: "File deleted."
+      allowed_mime_types:
+        create:
+          notice: "MIME type added."
+        destroy:
+          notice: "MIME type removed."
+    webauthn:
+      credentials:
+        destroy:
+          notice: "Passkey removed."
+      sessions:
+        create:
+          account_suspended: "Account suspended."
+
+  activerecord:
+    errors:
+      models:
+        shared_file:
+          attributes:
+            content_type:
+              file_type_not_allowed: "%{type} is not an allowed file type"
+            file:
+              file_must_be_attached: "must be attached"
+            base:
+              quota_exceeded: "Upload would exceed your storage quota (%{quota} limit)"
+
+  passwords_mailer:
+    reset:
+      subject: "Reset your password"
+      body_html: "You can reset your password on %{link}. This link will expire in %{expiry}."
+      body_text: "You can reset your password on %{url}\n\nThis link will expire in %{expiry}."
+      link_text: "this password reset page"
+
+  js:
+    copied: "Copied!"
+    passkey_name_prompt: "Give this passkey a name:"
+    passkey_default_name: "My Passkey"
+    passkey_register_failed: "Failed to register passkey: "
+    passkey_auth_failed: "Authentication failed: "
+    unknown_error: "Unknown error"

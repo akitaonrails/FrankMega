@@ -1,17 +1,17 @@
 <div class="max-w-lg mx-auto px-4 py-8">
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-xl p-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Create Invitation</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6"><%= t("admin.invitations.new.heading") %></h1>
 
     <%= form_with model: @invitation, url: admin_invitations_path, class: "space-y-6" do |f| %>
       <div>
-        <%= f.label :expires_at, "Expires At", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.label :expires_at, t("admin.invitations.new.expires_at"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.datetime_local_field :expires_at, value: 7.days.from_now.strftime("%Y-%m-%dT%H:%M"),
             class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
       </div>
 
       <div class="flex gap-4">
-        <%= f.submit "Create", class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
-        <%= link_to "Cancel", admin_invitations_path, class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>
+        <%= f.submit t("shared.actions.create"), class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+        <%= link_to t("shared.actions.cancel"), admin_invitations_path, class: "py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" %>
       </div>
     <% end %>
   </div>

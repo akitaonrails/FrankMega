@@ -17,7 +17,7 @@ class RegistrationsController < ApplicationController
     end
 
     start_new_session_for @user
-    redirect_to root_path, notice: "Account created successfully."
+    redirect_to root_path, notice: t("flash.registrations.create.notice")
   rescue ActiveRecord::RecordInvalid
     render :new, status: :unprocessable_entity
   end
@@ -30,7 +30,7 @@ class RegistrationsController < ApplicationController
 
   def ensure_invitation_valid
     if @invitation.nil? || !@invitation.pending?
-      redirect_to new_session_path, alert: "Invalid or expired invitation."
+      redirect_to new_session_path, alert: t("flash.registrations.create.invalid_invitation")
     end
   end
 
