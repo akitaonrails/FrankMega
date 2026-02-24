@@ -1,4 +1,6 @@
 class AllowedMimeType < ApplicationRecord
+  normalizes :mime_type, with: ->(val) { val.strip }
+
   validates :mime_type, presence: true, uniqueness: true
 
   scope :enabled, -> { where(enabled: true) }
@@ -18,17 +20,14 @@ class AllowedMimeType < ApplicationRecord
       "application/x-bzip2" => "BZip2 Archive",
       "application/x-rar-compressed" => "RAR Archive",
       "application/x-apple-diskimage" => "DMG Disk Image",
-      "application/vnd.debian.binary-package" => "DEB Package",
+      "application/zlib" => "Zlib Compressed Data (DMG/other)",
+      "application/x-debian-package" => "DEB Package",
       "application/x-rpm" => "RPM Package",
-      "application/x-redhat-package-manager" => "RPM Package (legacy)",
-      "application/vnd.flatpak.ref" => "Flatpak Ref",
-      "application/vnd.snap" => "Snap Package",
-      "application/vnd.appimage" => "AppImage",
       "application/x-executable" => "Linux Executable",
-      "application/x-msi" => "Windows Installer (MSI)",
-      "application/x-msdownload" => "Windows Executable (EXE)",
-      "application/vnd.microsoft.portable-executable" => "Windows PE Executable",
+      "application/x-ms-installer" => "Windows Installer (MSI)",
+      "application/x-dosexec" => "Windows Executable (EXE/DLL)",
       "application/x-iso9660-image" => "ISO Disk Image",
+      "application/octet-stream" => "Binary File (AppImage/pkg/other)",
       "image/jpeg" => "JPEG Image",
       "image/png" => "PNG Image",
       "image/gif" => "GIF Image",
