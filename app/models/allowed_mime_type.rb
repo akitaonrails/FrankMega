@@ -42,6 +42,7 @@ class AllowedMimeType < ApplicationRecord
       "application/json" => "JSON File",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => "Word Document",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "Excel Spreadsheet",
+      "application/vnd.android.package-archive" => "Android APK",
       "application/vnd.openxmlformats-officedocument.presentationml.presentation" => "PowerPoint Presentation"
     }
 
