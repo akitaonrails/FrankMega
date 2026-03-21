@@ -85,7 +85,7 @@ GEM
     android_key_attestation (0.3.0)
     ast (2.4.3)
     base64 (0.3.0)
-    bcrypt (3.1.21)
+    bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.2)
     bigdecimal (4.0.1)
     bindata (2.5.1)
@@ -438,7 +438,7 @@ PLATFORMS
 
 DEPENDENCIES
   administrate (~> 1.0)
-  bcrypt (~> 3.1.7)
+  bcrypt (~> 3.1.22)
   bootsnap
   brakeman
   bundler-audit
