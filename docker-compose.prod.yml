@@ -1,0 +1,16 @@
+name: frank_mega
+
+services:
+  web:
+    image: akitaonrails/frankmega:latest
+    container_name: frank-mega-web
+    restart: always
+    ports:
+      - "3100:80"
+    volumes:
+      - /var/opt/docker/frank_mega/uploads:/rails/storage/uploads
+      - /var/opt/docker/frank_mega/db:/rails/storage
+    security_opt:
+      - label:disable
+    env_file:
+      - .env.production

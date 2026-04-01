@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+IMAGE="akitaonrails/frankmega:latest"
+SERVER="192.168.0.90"
+DEPLOY_DIR="/var/opt/docker/frank_mega"
+SSH_OPTS="-F /dev/null -o StrictHostKeyChecking=accept-new"
+
+echo "==> Building Docker image..."
+docker build -t "$IMAGE" .
+
+echo "==> Pushing image to Docker Hub..."
+docker push "$IMAGE"
+
+echo "==> Deploying to $SERVER..."
+ssh $SSH_OPTS "$SERVER" "cd $DEPLOY_DIR && docker compose pull && docker compose up -d"
+
+echo "==> Waiting for container to be healthy..."
+ssh $SSH_OPTS "$SERVER" "sleep 3 && docker inspect --format='{{.State.Status}}' frank-mega-web"
+
+echo "==> Deploy complete!"
