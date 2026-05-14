@@ -27,6 +27,9 @@ Rails.application.routes.draw do
   resource :profile, only: %i[show update destroy]
 
   # File uploads (authenticated)
+  post "uploads/chunked/start", to: "chunked_uploads#start", as: :start_chunked_upload
+  post "uploads/chunked/:id/chunks", to: "chunked_uploads#chunk", as: :chunked_upload_chunks
+  post "uploads/chunked/:id/complete", to: "chunked_uploads#complete", as: :complete_chunked_upload
   resources :uploads, only: %i[new create show destroy]
 
   # Public download (no auth required)

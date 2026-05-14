@@ -12,7 +12,7 @@ class SharedFile < ApplicationRecord
   validates :expires_at, presence: true
   validates :original_filename, presence: true, length: { maximum: 255 }
   validates :content_type, presence: true
-  validates :file_size, presence: true, numericality: { less_than_or_equal_to: 1.gigabyte }
+  validates :file_size, presence: true, numericality: { less_than_or_equal_to: ->(_) { Rails.application.config.x.security.max_upload_size_bytes } }
   validate :file_type_allowed, on: :create
   validate :file_attached
   validate :within_user_quota, on: :create

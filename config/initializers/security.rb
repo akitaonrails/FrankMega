@@ -15,4 +15,6 @@ Rails.application.config.x.security = ActiveSupport::OrderedOptions.new.tap do |
 
   config.default_disk_quota_bytes = ENV.fetch("USER_DISK_QUOTA_BYTES", 5.gigabytes.to_s).to_i
   config.disk_quota_grace_bytes = 100.megabytes
+  config.max_upload_size_bytes = ENV.fetch("MAX_UPLOAD_SIZE_BYTES", 1.gigabyte.to_s).to_i
+  config.upload_chunk_size_bytes = ENV.fetch("UPLOAD_CHUNK_SIZE_BYTES", 90.megabytes.to_s).to_i
 end

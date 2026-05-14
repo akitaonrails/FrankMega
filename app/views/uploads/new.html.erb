@@ -30,14 +30,25 @@
 
     <%= render "shared/form_errors", resource: @shared_file %>
 
+    <% max_upload_size = Rails.application.config.x.security.max_upload_size_bytes %>
+    <% upload_chunk_size = Rails.application.config.x.security.upload_chunk_size_bytes %>
+
     <%= form_with model: @shared_file, url: uploads_path, multipart: true, class: "space-y-6",
         data: {
           controller: "upload",
-          upload_max_file_size_value: 1.gigabyte,
+          action: "submit->upload#submit",
+          upload_max_file_size_value: max_upload_size,
+          upload_chunk_size_value: upload_chunk_size,
+          upload_chunk_start_url_value: start_chunked_upload_path,
+          upload_chunk_url_template_value: chunked_upload_chunks_path(":id"),
+          upload_chunk_complete_url_template_value: complete_chunked_upload_path(":id"),
           upload_storage_remaining_value: current_user.storage_remaining,
-          upload_error_too_large_value: t("uploads.new.error_too_large"),
+          upload_error_too_large_value: t("uploads.new.error_too_large", size: number_to_human_size(max_upload_size)),
           upload_error_quota_exceeded_value: t("uploads.new.error_quota_exceeded"),
-          upload_error_invalid_filename_value: t("uploads.new.error_invalid_filename")
+          upload_error_invalid_filename_value: t("uploads.new.error_invalid_filename"),
+          upload_progress_preparing_value: t("uploads.new.progress_preparing"),
+          upload_progress_uploading_value: t("uploads.new.progress_uploading"),
+          upload_progress_processing_value: t("uploads.new.progress_processing")
         } do |f| %>
 
       <%# Drag and drop zone %>
@@ -51,7 +62,9 @@
         <%= file_field_tag :file, accept: AllowedMimeType.enabled_types.join(","),
             class: "mt-2 block mx-auto text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover file:cursor-pointer",
             data: { upload_target: "input", action: "change->upload#fileSelected" } %>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"><%= t("uploads.new.max_file_size") %></p>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <%= t("uploads.new.max_file_size", size: number_to_human_size(max_upload_size)) %>
+        </p>
 
         <%# Client-side validation error %>
         <div data-upload-target="error" class="hidden mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300 font-medium"></div>
@@ -67,7 +80,7 @@
           <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div data-upload-target="progressBar" class="bg-primary h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" data-upload-target="progressText">0%</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" data-upload-target="progressText"><%= t("uploads.new.progress_idle") %></p>
         </div>
       </div>
 

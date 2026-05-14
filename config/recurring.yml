@@ -4,6 +4,11 @@ production:
     queue: default
     schedule: every 15 minutes
 
+  cleanup_chunked_uploads:
+    class: CleanupChunkedUploadsJob
+    queue: default
+    schedule: every hour
+
   cleanup_expired_bans:
     class: CleanupExpiredBansJob
     queue: default
