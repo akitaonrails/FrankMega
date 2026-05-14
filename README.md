@@ -17,6 +17,7 @@ Built with Ruby on Rails 8.1, SQLite3, Tailwind CSS. Zero external services requ
 - **TOTP 2FA** — optional authenticator app verification with QR code setup
 - **Admin panel** — manage users, invitations, files, and allowed MIME types
 - **Upload validation** — client-side file size, quota, and filename checks before upload; server-side filename sanitization strips traversal paths, control characters, and Windows reserved names
+- **Chunked large uploads** — large files are split into Cloudflare-friendly chunks in the browser, then merged server-side into a normal Active Storage file
 - **Aggressive rate limiting** — Rack::Attack throttles + automatic IP banning on suspicious behavior
 - **Cloudflare-aware** — trusts Cloudflare proxy IPs so `request.ip` returns the real client
 - **Dark mode** — toggle with system preference fallback
@@ -26,7 +27,9 @@ Built with Ruby on Rails 8.1, SQLite3, Tailwind CSS. Zero external services requ
 
 ## Production Deployment (Docker Compose + Cloudflare Tunnel)
 
-The recommended setup runs FrankMega behind a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) — no open ports, no self-managed TLS certificates, free DDoS protection. The included `docker-compose.yml` runs both the app and the `cloudflared` connector as a sidecar.
+The recommended setup runs FrankMega behind a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) — no open ports, no self-managed TLS certificates, and Cloudflare's edge protections in front of your home server. This is an intentional part of the security model: the origin should stay private, and public traffic should arrive through Cloudflare. The included `docker-compose.yml` runs both the app and the `cloudflared` connector as a sidecar.
+
+Cloudflare plans impose a maximum request body size, commonly 100 MB on Free/Pro zones. FrankMega keeps the Cloudflare protection layer in place by chunking large uploads in the browser. Each chunk is posted below the proxy limit, stored temporarily on the server, and then merged into a normal Active Storage attachment after every chunk arrives. The final file still follows the app's usual quota, MIME type, expiration, and download-count rules.
 
 ### 1. Create a Cloudflare Tunnel
 
