@@ -3,7 +3,7 @@ require "test_helper"
 class UploadsControllerTest < ActionDispatch::IntegrationTest
   teardown do
     FileUtils.rm_rf(ChunkedUploadStore.root)
-    Rails.root.glob("tmp/test-chunk-*").each { |path| FileUtils.rm_f(path) }
+    Array(@chunk_paths).each { |path| FileUtils.rm_f(path) }
   end
 
   setup do
@@ -300,6 +300,7 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
   def uploaded_chunk(content)
     path = Rails.root.join("tmp/test-chunk-#{SecureRandom.hex(8)}")
     File.binwrite(path, content)
+    (@chunk_paths ||= []) << path
     Rack::Test::UploadedFile.new(path, "application/octet-stream", true)
   end
 
