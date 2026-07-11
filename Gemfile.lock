@@ -180,7 +180,7 @@ GEM
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
-    lefthook (2.1.9)
+    lefthook (2.1.10)
     letter_opener (1.10.0)
       launchy (>= 2.2, < 4)
     lint_roller (1.1.0)
@@ -398,7 +398,7 @@ GEM
       openssl (>= 2.2)
       safety_net_attestation (~> 0.5.0)
       tpm-key_attestation (~> 0.14.0)
-    websocket-driver (0.8.0)
+    websocket-driver (0.8.2)
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
