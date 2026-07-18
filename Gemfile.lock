@@ -113,7 +113,6 @@ GEM
     debug (1.11.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    docile (1.4.1)
     dotenv (3.2.0)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -331,12 +330,7 @@ GEM
     securerandom (0.4.1)
     shoulda-matchers (8.0.1)
       activesupport (>= 7.2)
-    simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.13.2)
-    simplecov_json_formatter (0.1.4)
+    simplecov (1.0.1)
     solid_cable (4.0.0)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -431,7 +425,7 @@ DEPENDENCIES
   rubocop-rails-omakase
   secure_headers (~> 7.0)
   shoulda-matchers (~> 8.0)
-  simplecov (~> 0.22)
+  simplecov (~> 1.0)
   solid_cable
   solid_cache
   solid_queue
