@@ -39,6 +39,37 @@ class SharedFileTest < ActiveSupport::TestCase
     assert build(:shared_file, file_size: 500.megabytes).valid?
   end
 
+  test "rejects zero-byte files" do
+    assert_not build(:shared_file, file_size: 0).valid?
+  end
+
+  test "rejects uploads at the active file limit" do
+    user = create(:user)
+    original_limit = Rails.application.config.x.security.max_active_files_per_user
+    Rails.application.config.x.security.max_active_files_per_user = 1
+    create(:shared_file, user: user)
+
+    shared_file = build(:shared_file, user: user)
+    assert_not shared_file.valid?
+    assert_includes shared_file.errors[:base], "Upload would exceed your active file limit"
+  ensure
+    Rails.application.config.x.security.max_active_files_per_user = original_limit
+  end
+
+  test "rejects files when no MIME types are enabled" do
+    AllowedMimeType.delete_all
+
+    shared_file = build(:shared_file)
+    assert_not shared_file.valid?
+    assert shared_file.errors[:content_type].any? { |message| message.include?("not an allowed") }
+  end
+
+  test "allows enabled MIME types" do
+    AllowedMimeType.find_by!(mime_type: "application/pdf").update!(enabled: true)
+
+    assert build(:shared_file, content_type: "application/pdf").valid?
+  end
+
   test "active? returns true for valid file" do
     shared_file = create(:shared_file)
     assert shared_file.active?

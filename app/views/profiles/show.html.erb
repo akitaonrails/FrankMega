@@ -21,6 +21,10 @@
 
     <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-4" do |f| %>
       <div>
+        <%= label_tag :current_password, t("profiles.show.current_password"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= password_field_tag :current_password, nil, required: true, autocomplete: "current-password", class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+      <div>
         <%= f.label :password, t("profiles.show.new_password"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.password_field :password, autocomplete: "new-password",
             class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
@@ -44,6 +48,10 @@
       </div>
       <%= form_with url: two_factor_path, method: :delete, class: "space-y-4" do |f| %>
         <div>
+          <%= f.label :current_password, t("profiles.show.current_password"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.password_field :current_password, required: true, autocomplete: "current-password", class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+        <div>
           <%= f.label :otp_code, t("profiles.show.enter_code_to_disable"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
           <%= f.text_field :otp_code, required: true, inputmode: "numeric", pattern: "[0-9]{6}", maxlength: 6,
               class: "w-64 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
@@ -53,16 +61,21 @@
       <% end %>
     <% else %>
       <p class="text-gray-600 dark:text-gray-400 mb-4"><%= t("profiles.show.two_factor_description") %></p>
-      <%= link_to t("profiles.show.enable_2fa"), new_two_factor_path, class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors inline-block" %>
+      <%= form_with url: two_factor_path, class: "space-y-4" do |f| %>
+        <div>
+          <%= f.label :current_password, t("profiles.show.current_password"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.password_field :current_password, required: true, autocomplete: "current-password", class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+        </div>
+        <%= f.submit t("profiles.show.enable_2fa"), class: "py-2 px-4 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg transition-colors cursor-pointer" %>
+      <% end %>
     <% end %>
   </div>
 
   <%# Passkeys %>
-  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6">
+  <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6" data-controller="webauthn">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold text-gray-900 dark:text-white"><%= t("profiles.show.passkeys") %></h2>
       <button type="button"
-              data-controller="webauthn"
               data-action="click->webauthn#register"
               data-webauthn-prompt-value="<%= t('js.passkey_name_prompt') %>"
               data-webauthn-default-name-value="<%= t('js.passkey_default_name') %>"
@@ -74,6 +87,13 @@
       </button>
     </div>
 
+    <div class="mb-4">
+      <label for="webauthn_current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><%= t("profiles.show.current_password") %></label>
+      <input type="password" id="webauthn_current_password" autocomplete="current-password" required
+             data-webauthn-target="currentPassword"
+             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+    </div>
+
     <% if @webauthn_credentials.any? %>
       <div class="space-y-3">
         <% @webauthn_credentials.each do |credential| %>
@@ -82,9 +102,10 @@
               <p class="font-medium text-gray-900 dark:text-white"><%= credential.nickname %></p>
               <p class="text-sm text-gray-500 dark:text-gray-400"><%= t("profiles.show.added_ago", time: time_ago_in_words(credential.created_at)) %></p>
             </div>
-            <%= button_to t("shared.actions.remove"), webauthn_credential_path(credential), method: :delete,
-                class: "text-sm text-red-600 hover:text-red-800 dark:text-red-400",
-                data: { turbo_confirm: t("shared.confirm.remove_passkey") } %>
+            <%= form_with url: webauthn_credential_path(credential), method: :delete, class: "flex items-center gap-2" do |f| %>
+              <%= f.password_field :current_password, required: true, autocomplete: "current-password", placeholder: t("profiles.show.current_password"), class: "w-36 px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+              <%= f.submit t("shared.actions.remove"), class: "text-sm text-red-600 hover:text-red-800 dark:text-red-400 cursor-pointer", data: { turbo_confirm: t("shared.confirm.remove_passkey") } %>
+            <% end %>
           </div>
         <% end %>
       </div>
@@ -117,8 +138,12 @@
   <div class="bg-white dark:bg-dark-surface rounded-2xl shadow p-6 border border-red-200 dark:border-red-800">
     <h2 class="text-xl font-semibold text-danger mb-2"><%= t("profiles.show.delete_account") %></h2>
     <p class="text-sm text-gray-600 dark:text-gray-400 mb-4"><%= t("profiles.show.delete_account_warning") %></p>
-    <%= button_to t("profiles.show.delete_account_button"), profile_path, method: :delete,
-        class: "py-2 px-4 bg-danger hover:bg-red-700 text-white font-semibold rounded-lg transition-colors cursor-pointer",
-        data: { turbo_confirm: t("shared.confirm.delete_account") } %>
+    <%= form_with url: profile_path, method: :delete, class: "space-y-4" do |f| %>
+      <div>
+        <%= f.label :current_password, t("profiles.show.current_password"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.password_field :current_password, required: true, autocomplete: "current-password", class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" %>
+      </div>
+      <%= f.submit t("profiles.show.delete_account_button"), class: "py-2 px-4 bg-danger hover:bg-red-700 text-white font-semibold rounded-lg transition-colors cursor-pointer", data: { turbo_confirm: t("shared.confirm.delete_account") } %>
+    <% end %>
   </div>
 </div>

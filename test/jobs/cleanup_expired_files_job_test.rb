@@ -11,13 +11,13 @@ class CleanupExpiredFilesJobTest < ActiveJob::TestCase
     assert SharedFile.exists?(active.id)
   end
 
-  test "removes exhausted files" do
+  test "keeps exhausted files until they expire" do
     exhausted = create(:shared_file, :exhausted)
     active = create(:shared_file)
 
     CleanupExpiredFilesJob.perform_now
 
-    assert_not SharedFile.exists?(exhausted.id)
+    assert SharedFile.exists?(exhausted.id)
     assert SharedFile.exists?(active.id)
   end
 end

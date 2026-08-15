@@ -7,7 +7,9 @@ class SetupControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates admin user" do
+    ENV["SETUP_TOKEN"] = "setup-token"
     post setup_path, params: {
+      setup_token: "setup-token",
       user: {
         email_address: "admin@example.com",
         password: "password123!safe",
@@ -19,6 +21,22 @@ class SetupControllerTest < ActionDispatch::IntegrationTest
     user = User.last
     assert_equal "admin", user.role
     assert_equal "admin@example.com", user.email_address
+  ensure
+    ENV.delete("SETUP_TOKEN")
+  end
+
+  test "rejects setup when token is missing or incorrect" do
+    ENV["SETUP_TOKEN"] = "setup-token"
+
+    post setup_path, params: { user: { email_address: "admin@example.com", password: "password123!safe", password_confirmation: "password123!safe" } }
+    assert_response :unprocessable_entity
+    assert_equal 0, User.count
+
+    post setup_path, params: { setup_token: "incorrect", user: { email_address: "admin@example.com", password: "password123!safe", password_confirmation: "password123!safe" } }
+    assert_response :unprocessable_entity
+    assert_equal 0, User.count
+  ensure
+    ENV.delete("SETUP_TOKEN")
   end
 
   test "setup endpoint not accessible when users exist" do

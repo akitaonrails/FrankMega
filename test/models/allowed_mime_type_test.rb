@@ -1,6 +1,10 @@
 require "test_helper"
 
 class AllowedMimeTypeTest < ActiveSupport::TestCase
+  setup do
+    AllowedMimeType.delete_all
+  end
+
   test "requires mime_type" do
     mime = AllowedMimeType.new(description: "Test")
     assert_not mime.valid?

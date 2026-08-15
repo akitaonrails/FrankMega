@@ -1,4 +1,7 @@
-Rack::Attack.cache.store = Rails.cache
+# Rack::Attack needs an independent, in-process store: the deployment runs one Puma
+# process behind Thruster, and MemoryStore counters are atomic under the GVL and do
+# not fail open because of SQLite lock timeouts. Keep Rails.cache for application jobs.
+Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new(size: 32.megabytes)
 
 security = Rails.application.config.x.security
 multiplier = security.rate_limit_multiplier || 1
@@ -23,6 +26,16 @@ end
 # Throttle 2FA OTP attempts by IP
 Rack::Attack.throttle("2fa/ip", limit: (5 * multiplier), period: 1.minute) do |req|
   req.ip if req.path == "/two_factor_session" && req.post?
+end
+
+# Throttle WebAuthn authentication attempts by IP
+Rack::Attack.throttle("webauthn/ip", limit: (5 * multiplier), period: 1.minute) do |req|
+  req.ip if req.path == "/webauthn/session" && req.post?
+end
+
+# Throttle password reset requests by IP
+Rack::Attack.throttle("password_resets/ip", limit: (5 * multiplier), period: 1.minute) do |req|
+  req.ip if req.path == "/passwords" && req.post?
 end
 
 # Throttle download page views (GET) by IP

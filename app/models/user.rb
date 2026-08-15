@@ -36,6 +36,7 @@ class User < ApplicationRecord
   def ban!
     update!(banned: true, banned_at: Time.current)
     sessions.destroy_all
+    ActionCable.server.remote_connections.where(current_user: self).disconnect
   end
 
   def unban!
@@ -49,17 +50,19 @@ class User < ApplicationRecord
   end
 
   def verify_otp(code)
-    return false unless otp_secret.present?
-    totp = ROTP::TOTP.new(otp_secret)
-    timestamp = totp.verify(code, drift_behind: 30, drift_ahead: 30)
-    return false unless timestamp
+    with_lock do
+      reload
+      return false unless otp_secret.present?
 
-    # Prevent OTP replay: reject if this code's timestamp was already used
-    if last_otp_at.present? && Time.at(timestamp) <= last_otp_at
-      return false
+      totp = ROTP::TOTP.new(otp_secret)
+      timestamp = totp.verify(code, drift_behind: 30, drift_ahead: 30)
+      return false unless timestamp
+
+      # Prevent OTP replay: reject if this code's timestamp was already used.
+      return false if last_otp_at.present? && Time.at(timestamp) <= last_otp_at
+
+      update_column(:last_otp_at, Time.at(timestamp))
     end
-
-    update_column(:last_otp_at, Time.at(timestamp))
     true
   end
 

@@ -4,6 +4,7 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
   teardown do
     FileUtils.rm_rf(ChunkedUploadStore.root)
     Array(@chunk_paths).each { |path| FileUtils.rm_f(path) }
+    Array(@upload_paths).each { |path| FileUtils.rm_f(path) }
   end
 
   setup do
@@ -63,6 +64,21 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
         shared_file: { max_downloads: 5, ttl_hours: 12 }
       }
     end
+    assert_response :unprocessable_entity
+  end
+
+  test "rejects zero-byte uploads" do
+    path = Rails.root.join("tmp/empty-upload-#{SecureRandom.hex(8)}.txt")
+    File.binwrite(path, "")
+    (@upload_paths ||= []) << path
+
+    assert_no_difference "SharedFile.count" do
+      post uploads_path, params: {
+        file: Rack::Test::UploadedFile.new(path, "text/plain", true),
+        shared_file: { max_downloads: 5, ttl_hours: 12 }
+      }
+    end
+
     assert_response :unprocessable_entity
   end
 

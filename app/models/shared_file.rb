@@ -12,10 +12,11 @@ class SharedFile < ApplicationRecord
   validates :expires_at, presence: true
   validates :original_filename, presence: true, length: { maximum: 255 }
   validates :content_type, presence: true
-  validates :file_size, presence: true, numericality: { less_than_or_equal_to: ->(_) { Rails.application.config.x.security.max_upload_size_bytes } }
+  validates :file_size, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: ->(_) { Rails.application.config.x.security.max_upload_size_bytes } }
   validate :file_type_allowed, on: :create
   validate :file_attached
   validate :within_user_quota, on: :create
+  validate :within_file_count_limit, on: :create
 
   scope :active, -> { where("expires_at > ? AND download_count < max_downloads", Time.current) }
   scope :expired, -> { where("expires_at <= ?", Time.current) }
@@ -87,9 +88,7 @@ class SharedFile < ApplicationRecord
 
   def file_type_allowed
     return unless content_type.present?
-    allowed = AllowedMimeType.enabled_types
-    return if allowed.empty?
-    unless allowed.include?(content_type)
+    unless AllowedMimeType.enabled_types.include?(content_type)
       errors.add(:content_type, I18n.t("activerecord.errors.models.shared_file.attributes.content_type.file_type_not_allowed", type: content_type))
     end
   end
@@ -104,5 +103,12 @@ class SharedFile < ApplicationRecord
       quota_display = ActionController::Base.helpers.number_to_human_size(user.disk_quota)
       errors.add(:base, I18n.t("activerecord.errors.models.shared_file.attributes.base.quota_exceeded", quota: quota_display))
     end
+  end
+
+  def within_file_count_limit
+    return unless user
+    return if user.shared_files.active.count < Rails.application.config.x.security.max_active_files_per_user
+
+    errors.add(:base, I18n.t("activerecord.errors.models.shared_file.attributes.base.file_limit_exceeded"))
   end
 end

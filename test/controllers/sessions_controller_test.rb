@@ -2,6 +2,7 @@ require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    Current.reset
     @user = create(:user, email_address: "test@example.com", password: "password123!safe")
   end
 
@@ -11,12 +12,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "login with valid credentials" do
-    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }
+    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }, env: { "REMOTE_ADDR" => "10.0.0.1" }
     assert_redirected_to root_path
+    assert_operator @user.sessions.last.expires_at, :>, Time.current
   end
 
   test "login with invalid credentials" do
-    post session_path, params: { email_address: "test@example.com", password: "wrong" }
+    post session_path, params: { email_address: "test@example.com", password: "wrong" }, env: { "REMOTE_ADDR" => "10.0.0.2" }
     assert_redirected_to new_session_path
     follow_redirect!
     assert_match(/Try another/, response.body)
@@ -24,7 +26,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "banned user cannot login" do
     @user.ban!
-    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }
+    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }, env: { "REMOTE_ADDR" => "10.0.0.3" }
     assert_redirected_to new_session_path
     follow_redirect!
     assert_match(/suspended/, response.body)
@@ -34,12 +36,12 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     @user.generate_otp_secret!
     @user.enable_otp!
 
-    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }
+    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }, env: { "REMOTE_ADDR" => "10.0.0.4" }
     assert_redirected_to new_two_factor_session_path
   end
 
   test "logout destroys session" do
-    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }
+    post session_path, params: { email_address: "test@example.com", password: "password123!safe" }, env: { "REMOTE_ADDR" => "10.0.0.5" }
 
     delete session_path
     assert_redirected_to new_session_path

@@ -30,7 +30,10 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
-    # Add more helper methods to be used by all tests here...
+    setup do
+      AllowedMimeType.seed_defaults! unless AllowedMimeType.exists?
+      Rack::Attack.cache.store.clear
+    end
   end
 end
 

@@ -4,17 +4,17 @@ Rails.application.config.x.security = ActiveSupport::OrderedOptions.new.tap do |
     config.ban_duration = 1.hour
     config.enable_banning = true
     config.max_invalid_hash_attempts = 3
-    config.max_404_attempts = 3
   else
     config.rate_limit_multiplier = 10
     config.ban_duration = 1.minute
     config.enable_banning = false
     config.max_invalid_hash_attempts = 10
-    config.max_404_attempts = 10
   end
 
   config.default_disk_quota_bytes = ENV.fetch("USER_DISK_QUOTA_BYTES", 5.gigabytes.to_s).to_i
   config.disk_quota_grace_bytes = 100.megabytes
   config.max_upload_size_bytes = ENV.fetch("MAX_UPLOAD_SIZE_BYTES", 1.gigabyte.to_s).to_i
   config.upload_chunk_size_bytes = ENV.fetch("UPLOAD_CHUNK_SIZE_BYTES", 90.megabytes.to_s).to_i
+  config.max_active_files_per_user = ENV.fetch("MAX_ACTIVE_FILES_PER_USER", "1000").to_i
+  config.session_lifetime_hours = ENV.fetch("SESSION_LIFETIME_HOURS", "720").to_i
 end

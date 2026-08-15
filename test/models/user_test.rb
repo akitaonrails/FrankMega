@@ -63,6 +63,7 @@ class UserTest < ActiveSupport::TestCase
     totp = ROTP::TOTP.new(user.otp_secret)
     code = totp.now
     assert user.verify_otp(code)
+    assert_not user.verify_otp(code)
     assert_not user.verify_otp("000000")
   end
 

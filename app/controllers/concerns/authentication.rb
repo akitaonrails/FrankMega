@@ -32,7 +32,8 @@ module Authentication
     session_record = find_session_by_cookie
     return nil unless session_record
 
-    if session_record.user.banned?
+    if session_record.expires_at <= Time.current || session_record.user.banned?
+      session_record.destroy
       cookies.delete(:session_id)
       return nil
     end
@@ -63,10 +64,15 @@ module Authentication
   end
 
   def start_new_session_for(user)
-    user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |new_session|
+    user.sessions.create!(
+      user_agent: request.user_agent,
+      ip_address: request.remote_ip,
+      expires_at: Rails.application.config.x.security.session_lifetime_hours.hours.from_now
+    ).tap do |new_session|
       Current.session = new_session
-      cookies.signed.permanent[:session_id] = {
+      cookies.signed[:session_id] = {
         value: new_session.id,
+        expires: new_session.expires_at,
         httponly: true,
         same_site: :lax,
         secure: Rails.env.production?

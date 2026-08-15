@@ -8,9 +8,11 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user
 
-    if @user.update(profile_params)
+    if @user.authenticate(params[:current_password]) && @user.update(profile_params)
+      @user.sessions.where.not(id: Current.session.id).destroy_all
       redirect_to profile_path, notice: t("flash.profiles.update.notice")
     else
+      @user.errors.add(:base, t("flash.profiles.current_password_required")) unless @user.authenticate(params[:current_password])
       @webauthn_credentials = @user.webauthn_credentials
       @sessions = @user.sessions.order(created_at: :desc)
       render :show, status: :unprocessable_entity
@@ -18,7 +20,9 @@ class ProfilesController < ApplicationController
   end
 
   def destroy
-    if current_user.sole_admin?
+    if !current_user.authenticate(params[:current_password])
+      redirect_to profile_path, alert: t("flash.profiles.current_password_required")
+    elsif current_user.sole_admin?
       redirect_to profile_path, alert: t("flash.profiles.destroy.sole_admin")
     else
       current_user.destroy

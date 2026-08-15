@@ -8,17 +8,27 @@ class UploadsController < ApplicationController
   end
 
   def create
-    @shared_file = current_user.shared_files.new(upload_params)
+    saved = current_user.with_lock do
+      current_user.reload
+      @shared_file = current_user.shared_files.new(upload_params)
 
-    if params[:file].present?
-      uploaded = params[:file]
-      @shared_file.file.attach(uploaded)
-      @shared_file.content_type = Marcel::MimeType.for(uploaded.tempfile, name: uploaded.original_filename)
-      @shared_file.original_filename = UploadFilenameSanitizer.call(uploaded.original_filename, @shared_file.content_type)
-      @shared_file.file_size = uploaded.tempfile.size
+      if params[:file].present?
+        uploaded = params[:file]
+        if uploaded.tempfile.size <= 0
+          @shared_file.errors.add(:file_size, :greater_than, count: 0)
+          next false
+        else
+          @shared_file.file.attach(uploaded)
+          @shared_file.content_type = Marcel::MimeType.for(uploaded.tempfile, name: uploaded.original_filename)
+          @shared_file.original_filename = UploadFilenameSanitizer.call(uploaded.original_filename, @shared_file.content_type)
+          @shared_file.file_size = uploaded.tempfile.size
+        end
+      end
+
+      @shared_file.save
     end
 
-    if @shared_file.save
+    if saved
       redirect_to upload_path(@shared_file)
     else
       @active_files = current_user.shared_files.active.order(created_at: :desc)

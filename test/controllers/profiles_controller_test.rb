@@ -2,8 +2,9 @@ require "test_helper"
 
 class ProfilesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    Current.reset
     @user = create(:user, email_address: "profile@example.com", password: "password123!safe")
-    post session_path, params: { email_address: "profile@example.com", password: "password123!safe" }
+    post session_path, params: { email_address: "profile@example.com", password: "password123!safe" }, env: { "REMOTE_ADDR" => "10.0.0.#{SecureRandom.random_number(255)}" }
   end
 
   test "shows profile page" do
@@ -14,21 +15,24 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
 
   test "updates password successfully" do
     patch profile_path, params: {
-      user: { password: "newpassword1234", password_confirmation: "newpassword1234" }
+      user: { password: "newpassword1234", password_confirmation: "newpassword1234" },
+      current_password: "password123!safe"
     }
     assert_redirected_to profile_path
   end
 
   test "rejects mismatched password update" do
     patch profile_path, params: {
-      user: { password: "newpassword1234", password_confirmation: "different123456" }
+      user: { password: "newpassword1234", password_confirmation: "different123456" },
+      current_password: "password123!safe"
     }
     assert_response :unprocessable_entity
   end
 
   test "rejects short password update" do
     patch profile_path, params: {
-      user: { password: "short", password_confirmation: "short" }
+      user: { password: "short", password_confirmation: "short" },
+      current_password: "password123!safe"
     }
     assert_response :unprocessable_entity
   end
@@ -41,7 +45,7 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
 
   test "deletes own account" do
     assert_difference "User.count", -1 do
-      delete profile_path
+      delete profile_path, params: { current_password: "password123!safe" }
     end
     assert_redirected_to new_session_path
     assert_nil User.find_by(id: @user.id)
@@ -50,7 +54,7 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   test "deletes associated files when account deleted" do
     create(:shared_file, user: @user)
     assert_difference "SharedFile.count", -1 do
-      delete profile_path
+      delete profile_path, params: { current_password: "password123!safe" }
     end
   end
 
@@ -60,7 +64,7 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     post session_path, params: { email_address: "admin@example.com", password: "password123!safe" }
 
     assert_no_difference "User.count" do
-      delete profile_path
+      delete profile_path, params: { current_password: "password123!safe" }
     end
     assert_redirected_to profile_path
     follow_redirect!

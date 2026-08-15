@@ -51,6 +51,7 @@ pt-BR:
   setup:
     new:
       heading: "Crie sua conta de administrador"
+      token: "Token de configuração"
       submit: "Criar Conta Admin"
 
   sessions:
@@ -100,6 +101,7 @@ pt-BR:
     show:
       heading: "Perfil"
       change_password: "Alterar Senha"
+      current_password: "Senha Atual"
       new_password: "Nova Senha"
       update_password: "Atualizar Senha"
       two_factor_auth: "Autenticação de Dois Fatores"
@@ -109,6 +111,7 @@ pt-BR:
       enable_2fa: "Ativar 2FA"
       passkeys: "Passkeys"
       add_passkey: "Adicionar Passkey"
+      passkey_password_hint: "Sua senha atual é obrigatória para gerenciar passkeys."
       added_ago: "Adicionada há %{time}"
       no_passkeys: "Nenhuma passkey registrada. Adicione uma para login sem senha."
       active_sessions: "Sessões Ativas"
@@ -145,6 +148,9 @@ pt-BR:
         invalid_chunk: "Parte de envio inválida."
         missing_chunk: "A parte do envio está ausente."
         chunk_too_large: "A parte do envio é grande demais."
+        chunk_size_mismatch: "O tamanho da parte do envio não corresponde ao tamanho esperado."
+        too_many_pending: "Há muitos envios pendentes."
+        pending_quota_exceeded: "Os envios pendentes excedem sua cota de armazenamento restante."
         incomplete: "O envio está incompleto (%{count} partes ausentes)."
         size_mismatch: "As partes enviadas não correspondem ao tamanho esperado do arquivo."
     show:
@@ -271,6 +277,7 @@ pt-BR:
     setup:
       create:
         notice: "Conta de administrador criada. Bem-vindo ao FrankMega!"
+        token_required: "A configuração está desativada até que SETUP_TOKEN seja configurado e informado."
     sessions:
       create:
         rate_limit: "Tente novamente mais tarde."
@@ -295,6 +302,7 @@ pt-BR:
       destroy:
         notice: "Autenticação de dois fatores desativada."
         alert: "Código inválido. 2FA não desativado."
+      current_password_required: "A senha atual é obrigatória."
     two_factor_sessions:
       create:
         rate_limit: "Muitas tentativas. Tente novamente mais tarde."
@@ -306,6 +314,7 @@ pt-BR:
       destroy:
         notice: "Sua conta foi excluída."
         sole_admin: "Não é possível excluir a única conta de administrador."
+      current_password_required: "A senha atual é obrigatória."
     uploads:
       destroy:
         notice: "Arquivo excluído."
@@ -337,11 +346,13 @@ pt-BR:
           notice: "Tipo MIME removido."
     webauthn:
       credentials:
+        current_password_required: "A senha atual é obrigatória."
         destroy:
           notice: "Passkey removida."
       sessions:
         create:
           account_suspended: "Conta suspensa."
+          invalid_credential: "Não foi possível autenticar com esta passkey."
 
   activerecord:
     errors:
@@ -358,6 +369,7 @@ pt-BR:
               file_must_be_attached: "deve ser anexado"
             base:
               quota_exceeded: "O envio excederia sua cota de armazenamento (limite de %{quota})"
+              file_limit_exceeded: "O envio excederia seu limite de arquivos ativos"
 
   passwords_mailer:
     reset:

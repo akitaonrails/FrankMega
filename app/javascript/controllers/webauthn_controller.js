@@ -1,6 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static targets = ["currentPassword"]
+
   static values = {
     challengeUrl: String,
     prompt: { type: String, default: "Give this passkey a name:" },
@@ -11,6 +13,11 @@ export default class extends Controller {
   }
 
   async register() {
+    if (!this.hasCurrentPasswordTarget || !this.currentPasswordTarget.value) {
+      alert(this.registerFailedValue + "Current password is required")
+      return
+    }
+
     try {
       const response = await fetch("/webauthn/credentials/new", {
         headers: { "Accept": "application/json", "X-CSRF-Token": this.csrfToken }
@@ -41,7 +48,8 @@ export default class extends Controller {
         },
         body: JSON.stringify({
           credential: this.serializeCredential(credential),
-          nickname: nickname
+          nickname: nickname,
+          current_password: this.currentPasswordTarget.value
         })
       })
 
@@ -55,6 +63,8 @@ export default class extends Controller {
       if (e.name !== "NotAllowedError") {
         console.error("WebAuthn registration error:", e)
       }
+    } finally {
+      this.currentPasswordTarget.value = ""
     }
   }
 

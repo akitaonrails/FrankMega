@@ -19,12 +19,22 @@ module Admin
     end
 
     def update
-      if removing_last_admin?
-        redirect_to admin_user_path(@user), alert: t("flash.admin.users.update.last_admin_role")
-        return
+      result = User.transaction do
+        current_user.with_lock do
+          @user.lock!
+          if removing_last_admin?
+            :last_admin
+          elsif @user.update(user_params)
+            :updated
+          else
+            :invalid
+          end
+        end
       end
 
-      if @user.update(user_params)
+      if result == :last_admin
+        redirect_to admin_user_path(@user), alert: t("flash.admin.users.update.last_admin_role")
+      elsif result == :updated
         redirect_to admin_user_path(@user), notice: t("flash.admin.users.update.notice")
       else
         render :edit, status: :unprocessable_entity
@@ -32,23 +42,43 @@ module Admin
     end
 
     def destroy
-      if @user.sole_admin?
-        redirect_to admin_user_path(@user), alert: t("flash.admin.users.destroy.last_admin")
-        return
+      result = User.transaction do
+        current_user.with_lock do
+          @user.lock!
+          if @user.admin? && User.admins.count <= 1
+            :last_admin
+          else
+            @user.destroy
+            :destroyed
+          end
+        end
       end
 
-      @user.destroy
-      redirect_to admin_users_path, notice: t("flash.admin.users.destroy.notice")
+      if result == :last_admin
+        redirect_to admin_user_path(@user), alert: t("flash.admin.users.destroy.last_admin")
+      else
+        redirect_to admin_users_path, notice: t("flash.admin.users.destroy.notice")
+      end
     end
 
     def ban
-      if @user.sole_admin?
-        redirect_to admin_user_path(@user), alert: t("flash.admin.users.ban.last_admin")
-        return
+      result = User.transaction do
+        current_user.with_lock do
+          @user.lock!
+          if @user.admin? && User.admins.count <= 1
+            :last_admin
+          else
+            @user.ban!
+            :banned
+          end
+        end
       end
 
-      @user.ban!
-      redirect_to admin_user_path(@user), notice: t("flash.admin.users.ban.notice")
+      if result == :last_admin
+        redirect_to admin_user_path(@user), alert: t("flash.admin.users.ban.last_admin")
+      else
+        redirect_to admin_user_path(@user), notice: t("flash.admin.users.ban.notice")
+      end
     end
 
     def unban

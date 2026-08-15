@@ -2,6 +2,9 @@ require "test_helper"
 
 class DownloadsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    %w[application/pdf image/png video/mp4 audio/mpeg].each do |mime_type|
+      AllowedMimeType.find_or_create_by!(mime_type: mime_type) { |type| type.description = mime_type }
+    end
     @shared_file = create(:shared_file)
   end
 
@@ -92,11 +95,12 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
     assert_match "inline", response.headers["Content-Disposition"]
   end
 
-  test "preview does not increment download counter" do
+  test "preview increments download counter" do
     image_file = create(:shared_file, :image)
-    assert_no_difference -> { image_file.reload.download_count } do
+    assert_difference -> { image_file.reload.download_count }, 1 do
       get download_preview_path(hash: image_file.download_hash)
     end
+    assert_response :success
   end
 
   test "preview returns 404 for non-previewable file" do
@@ -112,6 +116,53 @@ class DownloadsControllerTest < ActionDispatch::IntegrationTest
   test "preview returns 410 for expired file" do
     expired_image = create(:shared_file, :image, :expired)
     get download_preview_path(hash: expired_image.download_hash)
+    assert_response :gone
+  end
+
+  test "second preview in the same session does not consume another download" do
+    image_file = create(:shared_file, :image, max_downloads: 1)
+
+    get download_preview_path(hash: image_file.download_hash)
+    assert_response :success
+
+    assert_no_difference -> { image_file.reload.download_count } do
+      get download_preview_path(hash: image_file.download_hash)
+    end
+    assert_response :success
+  end
+
+  test "expired preview claim requires another download" do
+    image_file = create(:shared_file, :image, max_downloads: 1)
+
+    get download_preview_path(hash: image_file.download_hash)
+    assert_response :success
+
+    travel 6.minutes do
+      get download_preview_path(hash: image_file.download_hash)
+      assert_response :gone
+    end
+  end
+
+  test "preview claims are scoped to each file hash" do
+    first_file = create(:shared_file, :image, max_downloads: 1)
+    second_file = create(:shared_file, :image, max_downloads: 1)
+
+    assert_difference -> { first_file.reload.download_count }, 1 do
+      get download_preview_path(hash: first_file.download_hash)
+    end
+    assert_difference -> { second_file.reload.download_count }, 1 do
+      get download_preview_path(hash: second_file.download_hash)
+    end
+  end
+
+  test "expired files return 410 even with a preview claim" do
+    image_file = create(:shared_file, :image, max_downloads: 1)
+
+    get download_preview_path(hash: image_file.download_hash)
+    assert_response :success
+    image_file.update!(expires_at: 1.minute.ago)
+
+    get download_preview_path(hash: image_file.download_hash)
     assert_response :gone
   end
 

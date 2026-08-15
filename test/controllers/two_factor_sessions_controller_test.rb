@@ -23,6 +23,16 @@ class TwoFactorSessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test "rate limits OTP attempts by pending user across IP addresses" do
+    5.times do |index|
+      post two_factor_session_path, params: { otp_code: "000000" }, headers: { "REMOTE_ADDR" => "192.0.2.#{index + 1}" }
+      assert_response :unprocessable_entity
+    end
+
+    post two_factor_session_path, params: { otp_code: "000000" }, headers: { "REMOTE_ADDR" => "192.0.2.99" }
+    assert_redirected_to new_two_factor_session_path
+  end
+
   test "redirects without pending user" do
     reset!
     get new_two_factor_session_path

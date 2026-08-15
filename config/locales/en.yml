@@ -51,6 +51,7 @@ en:
   setup:
     new:
       heading: "Create your admin account"
+      token: "Setup token"
       submit: "Create Admin Account"
 
   sessions:
@@ -100,6 +101,7 @@ en:
     show:
       heading: "Profile"
       change_password: "Change Password"
+      current_password: "Current Password"
       new_password: "New Password"
       update_password: "Update Password"
       two_factor_auth: "Two-Factor Authentication"
@@ -109,6 +111,7 @@ en:
       enable_2fa: "Enable 2FA"
       passkeys: "Passkeys"
       add_passkey: "Add Passkey"
+      passkey_password_hint: "Your current password is required to manage passkeys."
       added_ago: "Added %{time} ago"
       no_passkeys: "No passkeys registered. Add one for passwordless login."
       active_sessions: "Active Sessions"
@@ -145,6 +148,9 @@ en:
         invalid_chunk: "Invalid upload chunk."
         missing_chunk: "Upload chunk is missing."
         chunk_too_large: "Upload chunk is too large."
+        chunk_size_mismatch: "Upload chunk size does not match the expected size."
+        too_many_pending: "Too many pending uploads."
+        pending_quota_exceeded: "Pending uploads exceed your remaining storage quota."
         incomplete: "Upload is incomplete (%{count} chunks missing)."
         size_mismatch: "Uploaded chunks do not match the expected file size."
     show:
@@ -271,6 +277,7 @@ en:
     setup:
       create:
         notice: "Admin account created. Welcome to FrankMega!"
+        token_required: "Setup is disabled until SETUP_TOKEN is configured and supplied."
     sessions:
       create:
         rate_limit: "Try again later."
@@ -295,6 +302,7 @@ en:
       destroy:
         notice: "Two-factor authentication disabled."
         alert: "Invalid code. 2FA not disabled."
+      current_password_required: "Current password is required."
     two_factor_sessions:
       create:
         rate_limit: "Too many attempts. Try again later."
@@ -306,6 +314,7 @@ en:
       destroy:
         notice: "Your account has been deleted."
         sole_admin: "Cannot delete the only admin account."
+      current_password_required: "Current password is required."
     uploads:
       destroy:
         notice: "File deleted."
@@ -337,11 +346,13 @@ en:
           notice: "MIME type removed."
     webauthn:
       credentials:
+        current_password_required: "Current password is required."
         destroy:
           notice: "Passkey removed."
       sessions:
         create:
           account_suspended: "Account suspended."
+          invalid_credential: "Unable to authenticate with this passkey."
 
   activerecord:
     errors:
@@ -358,6 +369,7 @@ en:
               file_must_be_attached: "must be attached"
             base:
               quota_exceeded: "Upload would exceed your storage quota (%{quota} limit)"
+              file_limit_exceeded: "Upload would exceed your active file limit"
 
   passwords_mailer:
     reset:

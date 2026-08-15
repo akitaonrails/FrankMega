@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
@@ -7,9 +6,8 @@
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
-ARG RUBY_VERSION=3.4.8
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+# Pinned 2026-08-15 from Docker Hub's ruby:3.4.8-slim manifest.
+FROM docker.io/library/ruby:3.4.8-slim@sha256:f8995929e4eb94f187b6a29ae6bd7e6c87c45e5aa83251752eff7e07d0f10515 AS base
 
 # Rails app lives here
 WORKDIR /rails
@@ -21,10 +19,14 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment variables and enable jemalloc for reduced memory usage and latency.
+# MAX_REQUEST_BODY is enforced by Thruster before Rails receives the request (0 is unlimited).
+# THRUSTER_LOG_REQUESTS disables proxy request logs that could contain capability URLs.
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development" \
+    MAX_REQUEST_BODY="1181116006" \
+    THRUSTER_LOG_REQUESTS="0" \
     LD_PRELOAD="/usr/local/lib/libjemalloc.so"
 
 # Throw-away build stage to reduce size of final image

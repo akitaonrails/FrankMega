@@ -50,15 +50,20 @@ docker run --rm ruby:3.4.8-slim ruby -e "puts SecureRandom.hex(64)"
 
 # ActiveRecord encryption keys (generates 3 keys, one per line)
 docker run --rm ruby:3.4.8-slim ruby -e "3.times { puts SecureRandom.hex(32) }"
+
+# First-run setup token
+docker run --rm ruby:3.4.8-slim ruby -e "puts SecureRandom.hex(32)"
 ```
 
 ### 3. Create a `.env` file
 
-> **Important:** `RAILS_MASTER_KEY` must be the exact value from `config/master.key` in the repo (32 hex characters). Do **not** generate a new one — it must match the key that encrypted `config/credentials.yml.enc`. All other variables below are also required.
+> **Important:** `RAILS_MASTER_KEY` must be the exact value from your local, git-ignored `config/master.key` (32 hex characters). Do **not** generate a new one — it must match the key that encrypted `config/credentials.yml.enc`. All other variables below are also required.
 
 ```env
 SECRET_KEY_BASE=<generated above>
 RAILS_MASTER_KEY=<copy exact contents of config/master.key>
+# Required to access /setup on a new installation; use the generated value above.
+SETUP_TOKEN=<generated above>
 
 # Must match the domain configured in the Cloudflare Tunnel
 HOST=frankmega.yourdomain.com
@@ -77,6 +82,15 @@ SMTP_ADDRESS=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USERNAME=you@gmail.com
 SMTP_PASSWORD=your-app-password
+
+# Optional limits (defaults shown)
+SESSION_LIFETIME_HOURS=720
+MAX_ACTIVE_FILES_PER_USER=1000
+# Set in the image to 1181116006 bytes (~1.1 GiB); override only if needed.
+MAX_REQUEST_BODY=1181116006
+
+# Required when using docker-compose.prod.yml. Use the reviewed release image digest.
+FRANKMEGA_IMAGE_DIGEST=sha256:<release digest>
 ```
 
 > **WebAuthn:** The `HOST`, `WEBAUTHN_ORIGIN`, and `WEBAUTHN_RP_ID` must match the domain in your Cloudflare Tunnel. Passkey registration/authentication will fail silently if these don't match.
@@ -92,6 +106,12 @@ Or build from source instead of pulling from Docker Hub:
 ```bash
 docker compose build
 docker compose up -d
+```
+
+For production deployments using the pre-built image, supply its immutable digest:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.prod.yml up -d
 ```
 
 The pre-built image is available at [`akitaonrails/frankmega`](https://hub.docker.com/r/akitaonrails/frankmega) on Docker Hub.

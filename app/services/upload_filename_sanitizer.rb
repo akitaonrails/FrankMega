@@ -19,7 +19,7 @@ class UploadFilenameSanitizer
   def call
     sanitized = File.basename(@name.to_s)
     sanitized = sanitized.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
-    sanitized = sanitized.gsub(/[\x00-\x1f\x7f\/\\:*?"<>|]/, "")
+    sanitized = sanitized.gsub(/[\x00-\x1f\x7f\/\\:*?"<>|\u202A-\u202E\u2066-\u2069\uFEFF\u200B-\u200D]/, "")
     sanitized = sanitized.sub(/\A\.+/, "")
     sanitized = sanitized.gsub(/\s+/, " ").strip
 
@@ -56,9 +56,15 @@ class UploadFilenameSanitizer
     ext = File.extname(name)
     base = File.basename(name, ext)
     max_base = max_bytes - ext.bytesize
-    return ext.byteslice(0, max_bytes) if max_base <= 0
+    return valid_utf8_byteslice(ext, max_bytes) if max_base <= 0
 
     base = base.chop while base.bytesize > max_base
-    "#{base}#{ext}"
+    valid_utf8_byteslice("#{base}#{ext}", max_bytes)
+  end
+
+  def valid_utf8_byteslice(value, max_bytes)
+    truncated = value.byteslice(0, max_bytes)
+    truncated = truncated.byteslice(0, truncated.bytesize - 1) until truncated.valid_encoding?
+    truncated
   end
 end

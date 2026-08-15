@@ -1,10 +1,12 @@
 services:
   web:
-    image: akitaonrails/frankmega:latest
+    # Local/source deployments always build this image instead of pulling a mutable tag.
+    image: frankmega:local
     build: .
-    # Port 3100 exposed for local/direct access — primary access is via Cloudflare Tunnel
+    pull_policy: build
+    # Cloudflare Tunnel is the only public path; loopback is for local debugging only.
     ports:
-      - "3100:80"
+      - "127.0.0.1:3100:80"
     volumes:
       - uploads:/rails/storage/uploads
       - db_data:/rails/storage
@@ -12,6 +14,8 @@ services:
       # Required — app will not boot without these
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      # Required for first-run /setup until the admin account exists
+      - SETUP_TOKEN=${SETUP_TOKEN}
       - HOST=${HOST}
       - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN}
       - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID}
@@ -25,21 +29,34 @@ services:
       # Storage
       - STORAGE_PATH=/rails/storage/uploads
       - USER_DISK_QUOTA_BYTES=${USER_DISK_QUOTA_BYTES:-5368709120}
+      # Thruster rejects bodies above this limit before Rails receives them.
+      - MAX_REQUEST_BODY=1181116006
       # SMTP (optional — leave blank to disable email delivery)
       - SMTP_ADDRESS=${SMTP_ADDRESS:-localhost}
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USERNAME=${SMTP_USERNAME}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   tunnel:
-    image: cloudflare/cloudflared:latest
+    # cloudflared:latest digest verified and pinned 2026-08-15.
+    image: cloudflare/cloudflared@sha256:de55830499e9adb1c580f7b5cbbdef86a3ff1715fb3ae6b3ff242f19de0afde8
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     depends_on:
       - web
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   uploads:

@@ -6,7 +6,10 @@ class InvalidHashAccessJob < ApplicationJob
     return unless security.enable_banning
 
     cache_key = "invalid_hash:#{ip_address}"
-    count = Rails.cache.increment(cache_key, 1, expires_in: 1.hour) || 1
+    count = Rails.cache.increment(cache_key, 1, expires_in: 1.hour)
+    count = Rails.cache.increment(cache_key, 1, expires_in: 1.hour) if count.nil?
+    # Banning is non-auth-critical, so a cache blip deliberately fails open.
+    count ||= 1
 
     if count >= security.max_invalid_hash_attempts
       Ban.ban!(ip_address, reason: "Repeated invalid download hash access", duration: security.ban_duration)

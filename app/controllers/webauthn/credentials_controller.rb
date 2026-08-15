@@ -16,26 +16,34 @@ module Webauthn
     end
 
     def create
-      webauthn_credential = WebAuthn::Credential.from_create(params[:credential])
+      if current_user.authenticate(params[:current_password])
+        webauthn_credential = WebAuthn::Credential.from_create(params[:credential])
 
-      webauthn_credential.verify(session.delete(:webauthn_creation_challenge))
+        webauthn_credential.verify(session.delete(:webauthn_creation_challenge))
 
-      current_user.webauthn_credentials.create!(
-        external_id: Base64.strict_encode64(webauthn_credential.raw_id),
-        public_key: webauthn_credential.public_key,
-        nickname: params[:nickname].presence || "Passkey",
-        sign_count: webauthn_credential.sign_count
-      )
+        current_user.webauthn_credentials.create!(
+          external_id: Base64.strict_encode64(webauthn_credential.raw_id),
+          public_key: webauthn_credential.public_key,
+          nickname: params[:nickname].presence || "Passkey",
+          sign_count: webauthn_credential.sign_count
+        )
 
-      render json: { status: "ok" }
+        render json: { status: "ok" }
+      else
+        render json: { error: t("flash.webauthn.credentials.current_password_required") }, status: :unprocessable_entity
+      end
     rescue WebAuthn::Error => e
       render json: { error: e.message }, status: :unprocessable_entity
     end
 
     def destroy
-      credential = current_user.webauthn_credentials.find(params[:id])
-      credential.destroy
-      redirect_to profile_path, notice: t("flash.webauthn.credentials.destroy.notice")
+      if current_user.authenticate(params[:current_password])
+        credential = current_user.webauthn_credentials.find(params[:id])
+        credential.destroy
+        redirect_to profile_path, notice: t("flash.webauthn.credentials.destroy.notice")
+      else
+        redirect_to profile_path, alert: t("flash.webauthn.credentials.current_password_required")
+      end
     end
   end
 end
