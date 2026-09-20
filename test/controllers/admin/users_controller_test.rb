@@ -33,8 +33,14 @@ module Admin
 
     test "admin can reset password" do
       user = create(:user)
+      old_digest = user.password_digest
       post reset_password_admin_user_path(user)
       assert_redirected_to admin_user_path(user)
+
+      user.reload
+      assert_not_equal old_digest, user.password_digest
+      assert_not_equal flash[:temp_password], user.password_digest
+      assert user.authenticate(flash[:temp_password])
     end
 
     test "non-admin redirected from admin panel" do
