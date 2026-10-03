@@ -12,8 +12,16 @@ docker build -t "$IMAGE" .
 echo "==> Pushing image to Docker Hub..."
 docker push "$IMAGE"
 
+# The server compose pins the image by digest; resolve the pushed manifest
+# digest and refresh the pin so deploys actually roll out.
+DIGEST="$(docker inspect "$IMAGE" --format '{{index .RepoDigests 0}}' | cut -d@ -f2)"
+echo "==> Pushed digest: $DIGEST"
+
 echo "==> Deploying to $SERVER..."
-ssh $SSH_OPTS "$SERVER" "cd $DEPLOY_DIR && docker compose pull && docker compose down && docker compose up -d"
+ssh $SSH_OPTS "$SERVER" "cd $DEPLOY_DIR && cp -n docker-compose.yml docker-compose.yml.bak && sed -i 's|frankmega@sha256:[a-f0-9]\{64\}|frankmega@$DIGEST|' docker-compose.yml && docker compose pull && docker compose down && docker compose up -d"
+
+echo "==> Verifying deployed image digest matches..."
+ssh $SSH_OPTS "$SERVER" "test \"\$(docker inspect frank-mega-web --format '{{.Image}}')\" = 'sha256:$DIGEST' || { echo 'ERROR: running image digest mismatch'; exit 1; }"
 
 echo "==> Waiting for container to be healthy..."
 ssh $SSH_OPTS "$SERVER" "sleep 3 && docker inspect --format='{{.State.Status}}' frank-mega-web"
