@@ -21,7 +21,7 @@ echo "==> Deploying to $SERVER..."
 ssh $SSH_OPTS "$SERVER" "cd $DEPLOY_DIR && cp -n docker-compose.yml docker-compose.yml.bak && sed -i 's|frankmega@sha256:[a-f0-9]\{64\}|frankmega@$DIGEST|' docker-compose.yml && docker compose pull && docker compose down && docker compose up -d"
 
 echo "==> Verifying deployed image digest matches..."
-ssh $SSH_OPTS "$SERVER" "test \"\$(docker inspect frank-mega-web --format '{{.Image}}')\" = 'sha256:$DIGEST' || { echo 'ERROR: running image digest mismatch'; exit 1; }"
+ssh $SSH_OPTS "$SERVER" "for i in 1 2 3 4 5; do test \"\$(docker inspect frank-mega-web --format '{{.Image}}')\" = 'sha256:$DIGEST' && exit 0; sleep 2; done; echo 'ERROR: running image digest mismatch'; exit 1"
 
 echo "==> Waiting for container to be healthy..."
 ssh $SSH_OPTS "$SERVER" "sleep 3 && docker inspect --format='{{.State.Status}}' frank-mega-web"
