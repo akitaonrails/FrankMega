@@ -23,7 +23,7 @@ gem "jbuilder"
 gem "bcrypt", "~> 3.1.7"
 
 # Authentication & Security
-gem "webauthn", "~> 3.0"
+gem "webauthn", "~> 3.5"
 gem "rotp", "~> 6.3"
 gem "rqrcode", "~> 3.2"
 gem "rack-attack", "~> 6.7"
