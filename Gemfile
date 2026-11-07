@@ -24,7 +24,7 @@ gem "bcrypt", "~> 3.1.7"
 
 # Authentication & Security
 gem "webauthn", "~> 3.5"
-gem "rotp", "~> 6.3"
+gem "rotp", "~> 6.4"
 gem "rqrcode", "~> 3.2"
 gem "rack-attack", "~> 6.7"
 # Cloudflare IP trust handled manually (cloudflare-rails incompatible with Rails 8.1)
